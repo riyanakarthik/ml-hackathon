@@ -77,6 +77,19 @@ def check_health(base_url: str) -> dict | str:
         return "Invalid JSON in /health response."
 
 
+def _extract_trip_id(item: Any) -> str | None:
+    """Extract a trip_id string from an item (dict, string, or int)."""
+    if isinstance(item, dict):
+        for k in ("trip_id", "id", "name"):
+            if k in item and item[k] is not None:
+                return str(item[k]).strip()
+        return None
+    if isinstance(item, (str, int)):
+        s = str(item).strip()
+        return s if s else None
+    return None
+
+
 def fetch_trips(base_url: str) -> list[str] | str:
     """GET /trips → list of trip-id strings, or error string."""
     try:
@@ -97,17 +110,24 @@ def fetch_trips(base_url: str) -> list[str] | str:
     except ValueError:
         return "Invalid JSON in /trips response."
 
-    # Flexible response shapes
+    # Flexible response shapes (list of ids, list of objects, wrapped dicts)
+    raw_items: list | None = None
     if isinstance(data, list):
-        return [str(t) for t in data]
-    if isinstance(data, dict):
-        for key in ("trips", "trip_ids"):
+        raw_items = data
+    elif isinstance(data, dict):
+        for key in ("trips", "trip_ids", "data", "items"):
             if key in data and isinstance(data[key], list):
-                return [str(t) for t in data[key]]
-        # list of objects with trip_id
-        if isinstance(data.get("trips"), list):
-            return [str(t) for t in data["trips"]]
-        # maybe list of dicts at top level
+                raw_items = data[key]
+                break
+
+    if raw_items is not None:
+        out: list[str] = []
+        for item in raw_items:
+            tid = _extract_trip_id(item)
+            if tid:
+                out.append(tid)
+        return out
+
     return "Unexpected /trips response shape."
 
 
@@ -306,7 +326,12 @@ with st.sidebar:
 
     health = st.session_state["health_status"]
     if isinstance(health, dict):
-        st.success(f"✅ Backend online — {health}")
+        status_msg = health.get("status", "ok")
+        cfg_msg = health.get("default_config")
+        extra = f" (default: `{cfg_msg}`)" if cfg_msg else ""
+        st.success(f"✅ Backend online: `{status_msg}`{extra}")
+        if "data_dir" in health:
+            st.caption(f"📁 Data: `{health['data_dir']}`")
     elif isinstance(health, str):
         st.error(f"❌ {health}")
         st.info("💡 Ensure the FastAPI server is running: "
@@ -406,15 +431,21 @@ if result is not None:
     metrics = result.get("metrics")
     if isinstance(metrics, dict) and metrics:
         st.subheader("Returned Evaluation Metrics")
-        keys = list(metrics.keys())
-        cols = st.columns(min(len(keys), 4))
-        for i, key in enumerate(keys):
-            col = cols[i % len(cols)]
-            val = metrics[key]
-            if isinstance(val, float):
-                col.metric(key, f"{val:.4f}")
-            else:
-                col.metric(key, str(val) if val is not None else "—")
+        if "metric_type" in metrics:
+            st.caption(f"ℹ️ {metrics['metric_type']}")
+
+        # Render numerical / metric cards across columns
+        display_metrics = {k: v for k, v in metrics.items() if k != "metric_type"}
+        keys = list(display_metrics.keys())
+        if keys:
+            cols = st.columns(min(len(keys), 4))
+            for i, key in enumerate(keys):
+                col = cols[i % len(cols)]
+                val = display_metrics[key]
+                if isinstance(val, float):
+                    col.metric(key, f"{val:.4f}")
+                else:
+                    col.metric(key, str(val) if val is not None else "—")
     elif metrics is None:
         st.info("No ground-truth metrics available for this trip "
                 "(no `.route` reference file).")
