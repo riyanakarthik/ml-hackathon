@@ -103,8 +103,23 @@ for (const b of blocks) {
         children: [new TextRun({ text: b.title, font: FONT, bold: true, size: 44, color: ACC })] }));
       children.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 200, after: 1400 },
         children: [new TextRun({ text: b.subtitle, font: FONT, size: 28 })] }));
-      for (const l of b.lines) children.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 140 },
-        children: [new TextRun({ text: l, font: FONT, size: 19, color: "52514E" })] }));
+      for (const l of b.lines) children.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 80 },
+        children: [new TextRun({ text: l, font: FONT, size: 20, color: "52514E" })] }));
+      children.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 700, after: 160 },
+        children: [new TextRun({ text: "Team " + b.team.Team, font: FONT, size: 26, bold: true })] }));
+      {
+        const tw = [2600, 3200];
+        const cell = (txt, bold, fill, w) => new TableCell({ borders, width: { size: w, type: WidthType.DXA },
+          shading: { fill, type: ShadingType.CLEAR, color: "auto" }, margins: { top: 60, bottom: 60, left: 120, right: 120 },
+          children: [new Paragraph({ children: [new TextRun({ text: txt, bold, font: FONT, size: 20 })] })] });
+        const rows = [new TableRow({ children: [cell("SRN", true, "EEF3FB", tw[0]), cell("Name", true, "EEF3FB", tw[1])] }),
+          ...b.team.members.map(([a, n]) => new TableRow({ children: [cell(a, false, "FFFFFF", tw[0]), cell(n, false, "FFFFFF", tw[1])] }))];
+        children.push(new Table({ alignment: AlignmentType.CENTER, width: { size: tw[0] + tw[1], type: WidthType.DXA },
+          columnWidths: tw, rows }));
+      }
+      children.push(new Paragraph({ spacing: { before: 900 } }));
+      for (const l of b.foot) children.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 60 },
+        children: [new TextRun({ text: l, font: FONT, size: 17, color: "52514E" })] }));
       children.push(new Paragraph({ children: [new PageBreak()] }));
       break;
     case "toc":
@@ -135,6 +150,10 @@ for (const b of blocks) {
                   right: { style: BorderStyle.SINGLE, size: 6, color: "EB6834", space: 4 } },
         children: runs(b.text, { size: 19 }) }));
       break;
+    case "eq":
+      children.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 60, after: 140 },
+        children: [new TextRun({ text: b.text, font: "Cambria Math", italics: true, size: 20 })] }));
+      break;
     case "bullets":
       for (const it of b.items) children.push(new Paragraph({ numbering: { reference: "bullets", level: 0 },
         spacing: { after: 60 }, children: runs(it, { size: 20 }) }));
@@ -164,6 +183,27 @@ for (const b of blocks) {
       children.push(new Paragraph({ alignment: AlignmentType.CENTER, keepNext: true, spacing: { before: 120 },
         children: [new ImageRun({ type: "png", data: fs.readFileSync(file), transformation: { width: w, height: h },
           altText: { title: b.caption.slice(0, 60), description: b.caption, name: path.basename(file) } })] }));
+      children.push(caption(b.caption));
+      break;
+    }
+    case "figrow": {
+      const half = Math.round(CONTENT_W / 2) - 60, halfPx = Math.round(half / 1440 * 96);
+      const cellsImg = b.paths.map((pth) => {
+        const [wpx, hpx] = pngSize(pth);
+        return new TableCell({ width: { size: half, type: WidthType.DXA },
+          borders: { top: { style: BorderStyle.NONE, size: 0, color: "FFFFFF" }, bottom: { style: BorderStyle.NONE, size: 0, color: "FFFFFF" },
+                     left: { style: BorderStyle.NONE, size: 0, color: "FFFFFF" }, right: { style: BorderStyle.NONE, size: 0, color: "FFFFFF" } },
+          children: [new Paragraph({ children: [new ImageRun({ type: "png", data: fs.readFileSync(pth),
+            transformation: { width: halfPx, height: Math.round(halfPx * hpx / wpx) },
+            altText: { title: path.basename(pth), description: path.basename(pth), name: path.basename(pth) } })] })] });
+      });
+      const cellsLab = b.labels.map((lb) => new TableCell({ width: { size: half, type: WidthType.DXA },
+        borders: { top: { style: BorderStyle.NONE, size: 0, color: "FFFFFF" }, bottom: { style: BorderStyle.NONE, size: 0, color: "FFFFFF" },
+                   left: { style: BorderStyle.NONE, size: 0, color: "FFFFFF" }, right: { style: BorderStyle.NONE, size: 0, color: "FFFFFF" } },
+        children: [new Paragraph({ children: [new TextRun({ text: lb, size: 15, color: "52514E", font: FONT })] })] }));
+      const cw2 = [half, CONTENT_W - half];
+      children.push(new Table({ width: { size: CONTENT_W, type: WidthType.DXA }, columnWidths: cw2,
+        rows: [new TableRow({ children: cellsImg }), new TableRow({ children: cellsLab })] }));
       children.push(caption(b.caption));
       break;
     }

@@ -1,5 +1,5 @@
 {
- "summary_line": "65 passed in 2.51s",
+ "summary_line": "65 passed in 2.52s",
  "passed": 65,
  "failed": 0,
  "per_file": {
@@ -8,5 +8,5 @@
   "tests/test_pathsnap.py": 26,
   "tests/test_robustness.py": 8
  },
- "git_head": "627c448"
+ "git_head": "b5d1c0c"
 }
