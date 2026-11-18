@@ -1,0 +1,31 @@
+[I 2026-11-18 22:29:47,196] Using an existing study with `study_name='rf_classifier'` instead of creating a new one.
+trial 15 was left RUNNING by an interrupted process -> marked FAIL
+  [10 complete / 17 total]
+  [10 complete / 18 total]
+trial 18 logloss 0.11027  {'n_estimators': 150, 'max_depth': 16, 'min_samples_leaf': 19, 'max_features': 0.33, 'max_samples': 0.3886744872112013}  107s
+  [11 complete / 19 total]
+trial 19 logloss 0.11069  {'n_estimators': 150, 'max_depth': 19, 'min_samples_leaf': 27, 'max_features': 0.33, 'max_samples': 0.2784698668930425}  79s
+  [12 complete / 20 total]
+trial 20 logloss 0.11001  {'n_estimators': 200, 'max_depth': 16, 'min_samples_leaf': 10, 'max_features': 0.33, 'max_samples': 0.4451772469736869}  153s
+  [13 complete / 21 total]
+trial 21 logloss 0.11066  {'n_estimators': 150, 'max_depth': 12, 'min_samples_leaf': 20, 'max_features': 0.33, 'max_samples': 0.5280243862651053}  119s
+  [14 complete / 22 total]
+trial 22 logloss 0.11069  {'n_estimators': 150, 'max_depth': 21, 'min_samples_leaf': 7, 'max_features': 0.33, 'max_samples': 0.3542494938328426}  100s
+  [15 complete / 23 total]
+trial 23 logloss 0.11033  {'n_estimators': 200, 'max_depth': 19, 'min_samples_leaf': 11, 'max_features': 0.33, 'max_samples': 0.35182666803080553}  140s
+  [16 complete / 24 total]
+trial 24 logloss 0.11016  {'n_estimators': 150, 'max_depth': 15, 'min_samples_leaf': 3, 'max_features': 0.33, 'max_samples': 0.46943300645523905}  124s
+  [17 complete / 25 total]
+  [17 complete / 26 total]
+trial 26 logloss 0.11024  {'n_estimators': 200, 'max_depth': 15, 'min_samples_leaf': 28, 'max_features': 0.33, 'max_samples': 0.40140070370190917}  142s
+  [18 complete / 27 total]
+  [18 complete / 28 total]
+trial 28 logloss 0.11026  {'n_estimators': 225, 'max_depth': 14, 'min_samples_leaf': 28, 'max_features': 0.33, 'max_samples': 0.516870135178444}  207s
+  [19 complete / 29 total]
+trial 29 logloss 0.11032  {'n_estimators': 175, 'max_depth': 17, 'min_samples_leaf': 3, 'max_features': 0.33, 'max_samples': 0.5132791525248231}  157s
+  [20 complete / 30 total]
+  [20 complete / 31 total]
+trial 31 logloss 0.11011  {'n_estimators': 200, 'max_depth': 13, 'min_samples_leaf': 7, 'max_features': 0.33, 'max_samples': 0.5461235312024904}  180s
+  [21 complete / 32 total]
+trial 32 logloss 0.11053  {'n_estimators': 175, 'max_depth': 12, 'min_samples_leaf': 6, 'max_features': 0.33, 'max_samples': 0.5744003485041581}  162s
+  [22 complete / 33 total]
