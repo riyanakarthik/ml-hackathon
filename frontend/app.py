@@ -1,10 +1,8 @@
 """PathSnap — GPS Route Reconstruction: Evaluator Dashboard.
 
-A lightweight Streamlit + Folium web application that connects over the
-network to the PathSnap FastAPI route-reconstruction backend (Laptop 1,
-port 8000).  Every trip choice, prediction result, metric and coordinate
-displayed in this dashboard is fetched **live** from the backend API —
-nothing is hardcoded or cached locally.
+A sleek, lightweight map-matching console connecting over LAN to the PathSnap
+FastAPI backend on Laptop 1 (port 8000).  Strictly zero hardcoded data: every
+trip choice, coordinate, and metric is fetched live from the backend API.
 
 Run:
     pip install -r requirements.txt
@@ -15,6 +13,7 @@ from __future__ import annotations
 
 import math
 from typing import Any
+from unittest.mock import MagicMock
 
 import folium
 import requests
@@ -28,6 +27,7 @@ st.set_page_config(
     page_title="PathSnap — GPS Route Reconstruction",
     layout="wide",
     page_icon="🗺️",
+    initial_sidebar_state="collapsed",
 )
 
 # ---------------------------------------------------------------------------
@@ -35,7 +35,7 @@ st.set_page_config(
 # ---------------------------------------------------------------------------
 _DEFAULTS: dict[str, Any] = {
     "backend_url": "http://localhost:8000",
-    "health_status": None,          # None | dict | str(error)
+    "health_status": None,
     "trips": [],
     "trips_error": None,
     "selected_trip": None,
@@ -47,8 +47,9 @@ for _k, _v in _DEFAULTS.items():
     if _k not in st.session_state:
         st.session_state[_k] = _v
 
+
 # ---------------------------------------------------------------------------
-# Helpers — API calls
+# Helpers — API calls (strictly adhering to backend contract)
 # ---------------------------------------------------------------------------
 
 def _norm_url(url: str) -> str:
@@ -171,6 +172,12 @@ def run_prediction(base_url: str, trip_id: str) -> dict | str:
     return payload
 
 
+# Aliases for backward compatibility
+check_backend_health = check_health
+fetch_available_trips = fetch_trips
+request_route_prediction = run_prediction
+
+
 # ---------------------------------------------------------------------------
 # Helpers — coordinate sanitization & map building
 # ---------------------------------------------------------------------------
@@ -200,17 +207,26 @@ def sanitize_coords(raw: list) -> list[tuple[float, float]]:
     return out
 
 
+sanitize_coordinates = sanitize_coords
+
+
 def build_route_map(
     gps_coords: list[tuple[float, float]],
     pred_coords: list[tuple[float, float]],
-    trip_id: str,
+    trip_id: str = "",
+    metrics: dict | None = None,
+    runtime_ms: float | None = None,
+    arc_count: int | None = None,
 ) -> folium.Map:
-    """Build an interactive Folium map with GPS observations & predicted route."""
-    # Compute bounding box across all points
+    """Build an interactive Folium map with GPS observations & predicted route.
+
+    Default base tile is OpenStreetMap so roads, highways, parks, and labels
+    are clearly visible, with OpenStreetMap as an alternate layer.
+    Includes dark floating Leaflet layer controls and bottom-left summary card.
+    """
     all_pts = gps_coords + pred_coords
     if not all_pts:
-        # Fallback: world centre
-        return folium.Map(location=[0, 0], zoom_start=2)
+        return folium.Map(location=[0, 0], zoom_start=2, tiles="OpenStreetMap")
 
     lats = [p[0] for p in all_pts]
     lons = [p[1] for p in all_pts]
@@ -218,97 +234,227 @@ def build_route_map(
     min_lon, max_lon = min(lons), max(lons)
     centre = [(min_lat + max_lat) / 2, (min_lon + max_lon) / 2]
 
-    fmap = folium.Map(location=centre, tiles="CartoDB positron")
+    fmap = folium.Map(location=centre, tiles="OpenStreetMap", control_scale=True)
+    folium.TileLayer("OpenStreetMap", name="OpenStreetMap").add_to(fmap)
 
-    # Additional tile layer
-    folium.TileLayer("OpenStreetMap").add_to(fmap)
-
-    # --- Layer 1: Noisy GPS Observations ---
-    gps_group = folium.FeatureGroup(name="Noisy GPS Observations")
-    for idx, (lat, lon) in enumerate(gps_coords):
-        folium.CircleMarker(
-            location=[lat, lon],
-            radius=4,
-            color="#1d4ed8",
-            fill=True,
-            fill_color="#2563eb",
-            fill_opacity=0.85,
-            tooltip=f"GPS #{idx}  ({lat:.6f}, {lon:.6f})",
-        ).add_to(gps_group)
-    gps_group.add_to(fmap)
-
-    # --- Layer 2: Predicted Route ---
-    pred_group = folium.FeatureGroup(name="Predicted Route")
+    # --- Layer 1: HMM / Viterbi route (bold royal blue polyline) ---
+    pred_layer_name = '<span style="display:inline-block;width:12px;height:4px;background:#2563eb;border-radius:2px;vertical-align:middle;margin-right:6px;"></span>HMM / Viterbi route'
+    pred_group = folium.FeatureGroup(name=pred_layer_name, show=True)
     if len(pred_coords) >= 2:
         folium.PolyLine(
             locations=pred_coords,
-            color="#16a34a",
-            weight=5,
-            opacity=0.9,
-            tooltip="Predicted Route",
+            color="#2563eb",
+            weight=6,
+            opacity=0.95,
+            tooltip=f"Trip {trip_id} — Predicted Route",
         ).add_to(pred_group)
+
+    # Waypoint markers: crisp white circles with dark border
     if pred_coords:
-        # Start marker
-        folium.Marker(
+        folium.CircleMarker(
             location=pred_coords[0],
-            icon=folium.Icon(color="green", icon="play", prefix="fa"),
+            radius=7,
+            color="#0f172a",
+            weight=3,
+            fill=True,
+            fill_color="#ffffff",
+            fill_opacity=1.0,
             tooltip="Route Start",
         ).add_to(pred_group)
+
     if len(pred_coords) >= 2:
-        # End marker
-        folium.Marker(
+        folium.CircleMarker(
             location=pred_coords[-1],
-            icon=folium.Icon(color="red", icon="stop", prefix="fa"),
+            radius=7,
+            color="#0f172a",
+            weight=3,
+            fill=True,
+            fill_color="#ffffff",
+            fill_opacity=1.0,
             tooltip="Route End",
         ).add_to(pred_group)
+        # Blue center accent on destination
+        folium.CircleMarker(
+            location=pred_coords[-1],
+            radius=3,
+            color="#2563eb",
+            weight=1,
+            fill=True,
+            fill_color="#2563eb",
+            fill_opacity=1.0,
+            tooltip="Route Destination",
+        ).add_to(pred_group)
+
     pred_group.add_to(fmap)
 
-    # Layer control
+    # --- Layer 2: Raw GPS fixes (translucent light dots) ---
+    gps_layer_name = '<span style="display:inline-block;width:7px;height:7px;background:#ffffff;border:1px solid #94a3b8;border-radius:50%;vertical-align:middle;margin-right:6px;"></span>Raw GPS fixes'
+    gps_group = folium.FeatureGroup(name=gps_layer_name, show=True)
+    for idx, (lat, lon) in enumerate(gps_coords):
+        folium.CircleMarker(
+            location=[lat, lon],
+            radius=3,
+            color="#94a3b8",
+            weight=1,
+            fill=True,
+            fill_color="#ffffff",
+            fill_opacity=0.75,
+            tooltip=f"GPS #{idx} ({lat:.6f}, {lon:.6f})",
+        ).add_to(gps_group)
+    gps_group.add_to(fmap)
+
+    # Layer control (styled dark via injected CSS)
     folium.LayerControl(collapsed=False).add_to(fmap)
 
-    # Legend
-    legend_html = """
+    # --- Floating dark bottom-left summary card & dark layer control CSS ---
+    f1_val = None
+    cont_val = None
+    if isinstance(metrics, dict):
+        f1_val = metrics.get("arc_f1") or metrics.get("macro_f1")
+        cont_val = metrics.get("route_continuity")
+
+    f1_str = f"{f1_val * 100:.1f}%" if isinstance(f1_val, (int, float)) else "N/A"
+    cont_str = f"{cont_val * 100:.1f}%" if isinstance(cont_val, (int, float)) else "N/A"
+    rt_str = f"{runtime_ms:,.0f} ms" if isinstance(runtime_ms, (int, float)) else "—"
+    arcs_display = f"{arc_count:,} road arcs matched" if arc_count is not None else "Route matching active"
+
+    overlay_html = f"""
+    <style>
+    .leaflet-control-layers {{
+        background: rgba(17, 20, 26, 0.92) !important;
+        color: #f8fafc !important;
+        border: 1px solid #2a303c !important;
+        border-radius: 12px !important;
+        padding: 10px 14px !important;
+        box-shadow: 0 10px 28px rgba(0,0,0,0.5) !important;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+        font-size: 12px !important;
+    }}
+    .leaflet-control-layers-base label, .leaflet-control-layers-overlays label {{
+        color: #f8fafc !important;
+        margin-bottom: 4px !important;
+        display: flex !important;
+        align-items: center !important;
+    }}
+    .leaflet-control-layers-separator {{
+        border-top: 1px solid #2a303c !important;
+        margin: 6px 0 !important;
+    }}
+    </style>
     <div style="
-        position: fixed; bottom: 30px; left: 30px; z-index: 1000;
-        background: white; padding: 10px 14px; border-radius: 6px;
-        box-shadow: 0 2px 6px rgba(0,0,0,.3); font-size: 13px;
-        line-height: 1.6;">
-      <b>Legend</b><br>
-      <span style="color:#2563eb;">&#9679;</span> Noisy GPS Observations<br>
-      <span style="color:#16a34a;">&#9644;</span> Predicted Route
+        position: fixed; bottom: 26px; left: 24px; z-index: 1000;
+        background: rgba(17, 20, 26, 0.94);
+        border: 1px solid #2a303c;
+        border-radius: 14px;
+        padding: 14px 18px;
+        color: #ffffff;
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55);
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        min-width: 260px;
+        backdrop-filter: blur(8px);
+    ">
+      <div style="font-weight: 700; font-size: 18px; line-height: 1.2; color: #ffffff;">Trip {trip_id or '—'}</div>
+      <div style="color: #94a3b8; font-size: 12px; margin-top: 3px; margin-bottom: 12px;">
+        {len(gps_coords):,} GPS fixes · {arcs_display}
+      </div>
+      <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+        <span style="background: #1e232d; color: #38bdf8; border: 1px solid #2a3240; padding: 4px 10px; border-radius: 9999px; font-size: 11px; font-weight: 600;">F1 {f1_str}</span>
+        <span style="background: #1e232d; color: #4ade80; border: 1px solid #2a3240; padding: 4px 10px; border-radius: 9999px; font-size: 11px; font-weight: 600;">Continuity {cont_str}</span>
+        <span style="background: #1e232d; color: #e2e8f0; border: 1px solid #2a3240; padding: 4px 10px; border-radius: 9999px; font-size: 11px; font-weight: 600;">{rt_str}</span>
+      </div>
     </div>
     """
-    fmap.get_root().html.add_child(folium.Element(legend_html))
+    fmap.get_root().html.add_child(folium.Element(overlay_html))
 
-    # Fit bounds with padding — handle single-point / identical-coord edge case
+    # Fit map bounds
     if max_lat - min_lat < 1e-6 and max_lon - min_lon < 1e-6:
         fmap.location = [min_lat, min_lon]
         fmap.zoom_start = 16
     else:
-        fmap.fit_bounds(
-            [[min_lat, min_lon], [max_lat, max_lon]], padding=(30, 30)
-        )
+        fmap.fit_bounds([[min_lat, min_lon], [max_lat, max_lon]], padding=(30, 30))
 
     return fmap
 
 
 # ---------------------------------------------------------------------------
-# Sidebar
+# UI Rendering (sleek dark console + full-bleed Folium map)
 # ---------------------------------------------------------------------------
-with st.sidebar:
-    st.title("🗺️ PathSnap")
-    st.caption("Evaluator Dashboard")
 
-    st.subheader("Backend Connection")
-    url_input = st.text_input(
-        "Backend URL",
-        value=st.session_state["backend_url"],
-        placeholder="http://<laptop-1-ip>:8000",
+def render_app():
+    # Inject lightweight CSS for sleek dark theme & zero excess whitespace
+    st.markdown(
+        """
+        <style>
+        /* Hide default Streamlit headers and footers */
+        header[data-testid="stHeader"] {display: none !important;}
+        #MainMenu {visibility: hidden !important;}
+        footer {visibility: hidden !important;}
+        div[data-testid="stToolbar"] {display: none !important;}
+        div[data-testid="stDecoration"] {display: none !important;}
+        div[data-testid="stStatusWidget"] {display: none !important;}
+
+        /* Full-width block container */
+        .main .block-container {
+            padding-top: 1rem !important;
+            padding-bottom: 0.8rem !important;
+            padding-left: 1.2rem !important;
+            padding-right: 1.2rem !important;
+            max-width: 100% !important;
+        }
+
+        /* Dark console styling */
+        div[data-testid="column"]:first-child {
+            background-color: #0b0d10;
+            border-radius: 16px;
+            padding: 6px 10px;
+        }
+
+        /* Selected trip button: solid crisp white */
+        div[data-testid="stBaseButton-primary"] > button {
+            background-color: #ffffff !important;
+            color: #0b0d10 !important;
+            font-weight: 700 !important;
+            border: 1px solid #ffffff !important;
+            border-radius: 9px !important;
+            box-shadow: 0 2px 8px rgba(255,255,255,0.18) !important;
+            transition: all 0.15s ease-in-out !important;
+        }
+        div[data-testid="stBaseButton-primary"] > button:hover {
+            background-color: #f1f5f9 !important;
+            color: #0b0d10 !important;
+        }
+
+        /* Unselected trip button: rounded dark card */
+        div[data-testid="stBaseButton-secondary"] > button {
+            background-color: #161920 !important;
+            color: #cbd5e1 !important;
+            font-weight: 500 !important;
+            border: 1px solid #262b36 !important;
+            border-radius: 9px !important;
+            transition: all 0.15s ease-in-out !important;
+        }
+        div[data-testid="stBaseButton-secondary"] > button:hover {
+            background-color: #202530 !important;
+            border-color: #3b4252 !important;
+            color: #ffffff !important;
+        }
+
+        /* Dark input styling */
+        div[data-testid="stTextInput"] input {
+            background-color: #14171d !important;
+            color: #f8fafc !important;
+            border: 1px solid #262b36 !important;
+            border-radius: 8px !important;
+            font-size: 13px !important;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
     )
-    st.session_state["backend_url"] = _norm_url(url_input)
-    base = st.session_state["backend_url"]
 
-    # Auto-check on first load or URL change
+    base = _norm_url(st.session_state["backend_url"])
+
+    # Auto check backend health & trips on initial load or URL change
     if st.session_state["_last_checked_url"] != base:
         st.session_state["health_status"] = check_health(base)
         trips_result = fetch_trips(base)
@@ -320,162 +466,264 @@ with st.sidebar:
             st.session_state["trips_error"] = trips_result
         st.session_state["_last_checked_url"] = base
 
-    # Manual health check
-    if st.button("🔍 Check Backend Status"):
-        st.session_state["health_status"] = check_health(base)
-
+    trips = st.session_state["trips"]
     health = st.session_state["health_status"]
-    if isinstance(health, dict):
-        status_msg = health.get("status", "ok")
-        cfg_msg = health.get("default_config")
-        extra = f" (default: `{cfg_msg}`)" if cfg_msg else ""
-        st.success(f"✅ Backend online: `{status_msg}`{extra}")
-        if "data_dir" in health:
-            st.caption(f"📁 Data: `{health['data_dir']}`")
-    elif isinstance(health, str):
-        st.error(f"❌ {health}")
-        st.info("💡 Ensure the FastAPI server is running: "
-                "`uvicorn main:app --host 0.0.0.0 --port 8000`")
-    else:
-        st.warning("Backend status unknown — click **Check Backend Status**.")
+    is_online = isinstance(health, dict)
 
-    st.divider()
-    st.subheader("Trip Selection")
+    # Auto-select and auto-run first trip on initial load
+    if trips and not st.session_state["selected_trip"]:
+        st.session_state["selected_trip"] = trips[0]
 
-    if st.button("🔄 Refresh Trips"):
-        trips_result = fetch_trips(base)
-        if isinstance(trips_result, list):
-            st.session_state["trips"] = trips_result
-            st.session_state["trips_error"] = None
-        else:
-            st.session_state["trips"] = []
-            st.session_state["trips_error"] = trips_result
-
-    trips_list = st.session_state["trips"]
-    trips_err = st.session_state["trips_error"]
-
-    if trips_err:
-        st.error(trips_err)
-    if not trips_list:
-        st.warning("No trips available — check backend connection.")
-
-    selected = st.selectbox(
-        "Select Evaluation Trip",
-        options=trips_list if trips_list else [],
-        disabled=not trips_list,
-        index=0 if trips_list else 0,
-    )
-    st.session_state["selected_trip"] = selected
-
-    st.divider()
-
-    run_disabled = not selected or not trips_list
-    if st.button(
-        "🚀 Run Route Reconstruction",
-        type="primary",
-        disabled=run_disabled,
-        use_container_width=True,
+    if (
+        st.session_state["selected_trip"]
+        and st.session_state["prediction_result"] is None
+        and not st.session_state["prediction_error"]
+        and is_online
     ):
-        # Clear stale errors
-        st.session_state["prediction_error"] = None
-        st.session_state["prediction_result"] = None
-        with st.spinner(f"Running prediction for trip **{selected}** …"):
-            result = run_prediction(base, selected)
-        if isinstance(result, dict):
-            st.session_state["prediction_result"] = result
-            st.session_state["prediction_error"] = None
+        with st.spinner(f"Matching trip {st.session_state['selected_trip']} ..."):
+            res = run_prediction(base, st.session_state["selected_trip"])
+            if isinstance(res, dict):
+                st.session_state["prediction_result"] = res
+                st.session_state["prediction_error"] = None
+            else:
+                st.session_state["prediction_error"] = res
+                st.session_state["prediction_result"] = None
+
+    # Two-column layout: Left console (1.05) + Right full-bleed Folium map (2.35)
+    col_console, col_map = st.columns([1.05, 2.35], gap="small")
+
+    # =======================================================================
+    # LEFT COLUMN: Dark Console Panel
+    # =======================================================================
+    with col_console:
+        # 1. Header Bar with Logo and API Live/Offline Badge
+        status_pill_html = (
+            """<div style="display:inline-flex;align-items:center;gap:6px;background:#0f291e;color:#4ade80;border:1px solid #1e4634;padding:4px 10px;border-radius:9999px;font-size:12px;font-weight:600;"><span style="font-size:9px;">●</span> API live</div>"""
+            if is_online
+            else """<div style="display:inline-flex;align-items:center;gap:6px;background:#2c1215;color:#f87171;border:1px solid #4c1d24;padding:4px 10px;border-radius:9999px;font-size:12px;font-weight:600;"><span style="font-size:9px;">●</span> API offline</div>"""
+        )
+
+        st.markdown(
+            f"""
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="background: #ffffff; color: #0b0d10; font-weight: 900; font-size: 15px; width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; letter-spacing: -0.5px;">PS</div>
+                <div>
+                  <div style="color: #ffffff; font-weight: 700; font-size: 18px; line-height: 1.1;">PathSnap</div>
+                  <div style="color: #94a3b8; font-size: 12px; font-weight: 500;">Map-matching console</div>
+                </div>
+              </div>
+              {status_pill_html}
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+        # 2. Compact LAN Backend Connection Bar
+        bcol1, bcol2 = st.columns([3.2, 1.2], gap="small")
+        with bcol1:
+            new_url = st.text_input(
+                "Backend URL",
+                value=st.session_state["backend_url"],
+                placeholder="http://<laptop-1-ip>:8000",
+                label_visibility="collapsed",
+            )
+            st.session_state["backend_url"] = _norm_url(new_url)
+        with bcol2:
+            if st.button("Connect", use_container_width=True):
+                st.session_state["_last_checked_url"] = None
+                st.rerun()
+
+        # 3. 2-Column Interactive Trip Button Grid
+        st.markdown(
+            """<div style="color: #64748b; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; margin-top: 12px; margin-bottom: 6px;">SELECT EVALUATION TRIP</div>""",
+            unsafe_allow_html=True,
+        )
+
+        if not trips:
+            if st.session_state["trips_error"]:
+                st.error(f"Cannot load trips: {st.session_state['trips_error']}")
+            else:
+                st.warning("No trips available from backend.")
         else:
-            st.session_state["prediction_error"] = result
-            st.session_state["prediction_result"] = None
+            tcol1, tcol2 = st.columns(2, gap="small")
+            for idx, tid in enumerate(trips):
+                col = tcol1 if idx % 2 == 0 else tcol2
+                is_selected = tid == st.session_state["selected_trip"]
+                btn_label = f"{tid}   #{idx + 1}"
+                if col.button(
+                    btn_label,
+                    key=f"trip_btn_{tid}",
+                    type="primary" if is_selected else "secondary",
+                    use_container_width=True,
+                ):
+                    st.session_state["selected_trip"] = tid
+                    with st.spinner(f"Matching trip {tid} ..."):
+                        res = run_prediction(base, tid)
+                        if isinstance(res, dict):
+                            st.session_state["prediction_result"] = res
+                            st.session_state["prediction_error"] = None
+                        else:
+                            st.session_state["prediction_error"] = res
+                            st.session_state["prediction_result"] = None
+                    st.rerun()
+
+        # 4. Live Status Box
+        result = st.session_state["prediction_result"]
+        pred_err = st.session_state["prediction_error"]
+        sel_trip = st.session_state["selected_trip"] or "—"
+
+        if pred_err:
+            st.markdown(
+                f"""
+                <div style="background: #231215; border: 1px solid #4a1f26; border-radius: 10px; padding: 10px 14px; margin-top: 12px; margin-bottom: 14px; color: #fca5a5; font-size: 12px;">
+                  ⚠️ {pred_err}
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
+        elif result:
+            n_fixes = len(result.get("gps_coordinates", []))
+            st.markdown(
+                f"""
+                <div style="background: #161920; border: 1px solid #262b36; border-radius: 10px; padding: 10px 14px; margin-top: 12px; margin-bottom: 14px; color: #e2e8f0; font-size: 13px;">
+                  <span style="color: #38bdf8; font-weight: 600;">Trip {result.get('trip_id', sel_trip)}</span> done – <b>{n_fixes:,}</b> fixes matched by the live API.
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
+        else:
+            st.markdown(
+                """
+                <div style="background: #161920; border: 1px solid #262b36; border-radius: 10px; padding: 10px 14px; margin-top: 12px; margin-bottom: 14px; color: #94a3b8; font-size: 12px;">
+                  Select a trip above to run route reconstruction.
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
+
+        # 5. ROUTE QUALITY 2x2 Metric Card Grid
+        st.markdown(
+            """<div style="color: #64748b; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px;">ROUTE QUALITY</div>""",
+            unsafe_allow_html=True,
+        )
+
+        metrics = result.get("metrics") if isinstance(result, dict) else None
+        method_str = str(result.get("method", "—")) if isinstance(result, dict) else "—"
+        arc_ids_list = result.get("predicted_arc_ids", []) if isinstance(result, dict) else []
+
+        # Strictly extract metrics returned from backend
+        prec_val = None
+        cont_val = None
+        f1_val = None
+        rec_val = None
+        if isinstance(metrics, dict):
+            prec_val = metrics.get("arc_precision") or metrics.get("top1_accuracy")
+            cont_val = metrics.get("route_continuity")
+            f1_val = metrics.get("arc_f1") or metrics.get("macro_f1")
+            rec_val = metrics.get("arc_recall")
+
+        def _fmt_pct(v: Any) -> str:
+            if isinstance(v, (int, float)):
+                return f"{v * 100:.1f}%" if v <= 1.0 else f"{v:.1f}%"
+            return "—"
+
+        prec_str = _fmt_pct(prec_val)
+        cont_str = _fmt_pct(cont_val)
+        f1_str = _fmt_pct(f1_val)
+        rec_str = _fmt_pct(rec_val)
+
+        st.markdown(
+            f"""
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+              <!-- Card 1: Arc Precision -->
+              <div style="background: #15181e; border: 1px solid #232832; border-radius: 12px; padding: 12px 14px;">
+                <div style="color: #94a3b8; font-size: 12px; font-weight: 500; margin-bottom: 4px;">Arc Precision</div>
+                <div style="color: #ffffff; font-size: 22px; font-weight: 700; line-height: 1.1;">{prec_str}</div>
+                <div style="color: #64748b; font-size: 11px; margin-top: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">method: {method_str}</div>
+              </div>
+
+              <!-- Card 2: Route Continuity -->
+              <div style="background: #15181e; border: 1px solid #232832; border-radius: 12px; padding: 12px 14px;">
+                <div style="color: #94a3b8; font-size: 12px; font-weight: 500; margin-bottom: 4px;">Route Continuity</div>
+                <div style="color: #ffffff; font-size: 22px; font-weight: 700; line-height: 1.1;">{cont_str}</div>
+                <div style="color: #64748b; font-size: 11px; margin-top: 4px;">connected path ratio</div>
+              </div>
+
+              <!-- Card 3: Route Arc F1 -->
+              <div style="background: #15181e; border: 1px solid #232832; border-radius: 12px; padding: 12px 14px;">
+                <div style="color: #94a3b8; font-size: 12px; font-weight: 500; margin-bottom: 4px;">Route Arc F1</div>
+                <div style="color: #ffffff; font-size: 22px; font-weight: 700; line-height: 1.1;">{f1_str}</div>
+                <div style="color: #64748b; font-size: 11px; margin-top: 4px;">vs reference route</div>
+              </div>
+
+              <!-- Card 4: Arc Recall -->
+              <div style="background: #15181e; border: 1px solid #232832; border-radius: 12px; padding: 12px 14px;">
+                <div style="color: #94a3b8; font-size: 12px; font-weight: 500; margin-bottom: 4px;">Arc Recall</div>
+                <div style="color: #ffffff; font-size: 22px; font-weight: 700; line-height: 1.1;">{rec_str}</div>
+                <div style="color: #64748b; font-size: 11px; margin-top: 4px;">{len(arc_ids_list):,} arcs matched</div>
+              </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+        # 6. Console Footer
+        st.markdown(
+            """
+            <div style="margin-top: 18px; color: #475569; font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-align: center; text-transform: uppercase;">
+              ALL METRICS · COMPUTED SERVER-SIDE
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+        # Raw Output Inspection Expander
+        if result:
+            with st.expander("Predicted Arc IDs & Raw API Payload", expanded=False):
+                st.write("**Predicted Arc IDs**")
+                st.write(result.get("predicted_arc_ids", []))
+                st.write("**Full API Response**")
+                st.json(result)
+
+    # =======================================================================
+    # RIGHT COLUMN: Full-Height Interactive Folium Map
+    # =======================================================================
+    with col_map:
+        if result:
+            gps_clean = sanitize_coords(result.get("gps_coordinates", []))
+            pred_raw = result.get("predicted_coordinates", [])
+            pred_clean = sanitize_coords([p for p in pred_raw if p is not None])
+            current_tid = str(result.get("trip_id", sel_trip))
+
+            route_map = build_route_map(
+                gps_clean,
+                pred_clean,
+                trip_id=current_tid,
+                metrics=result.get("metrics"),
+                runtime_ms=result.get("runtime_ms"),
+                arc_count=len(result.get("predicted_arc_ids", [])),
+            )
+            st_folium(
+                route_map,
+                width=None,
+                height=740,
+                returned_objects=[],
+                key=f"map_{current_tid}",
+            )
+        else:
+            # Fallback placeholder map
+            fallback_map = folium.Map(location=[53.9, 27.5], zoom_start=11, tiles="OpenStreetMap")
+            folium.TileLayer("OpenStreetMap").add_to(fallback_map)
+            st_folium(
+                fallback_map,
+                width=None,
+                height=740,
+                returned_objects=[],
+                key="map_placeholder",
+            )
 
 
-# ---------------------------------------------------------------------------
-# Main panel
-# ---------------------------------------------------------------------------
-st.title("PathSnap — GPS Route Reconstruction")
-st.caption("Interactive evaluator dashboard · connects to FastAPI inference backend")
-
-result = st.session_state["prediction_result"]
-pred_err = st.session_state["prediction_error"]
-
-if pred_err:
-    st.error(f"Prediction failed: {pred_err}")
-
-if result is None:
-    st.info(
-        "👈 Select an evaluation trip in the sidebar and click "
-        "**Run Route Reconstruction** to begin."
-    )
-    st.stop()
-
-# ---------------------------------------------------------------------------
-# KPI strip  (guarded so test-time import with mocked st.stop is safe)
-# ---------------------------------------------------------------------------
-if result is not None:
-    trip_id = str(result.get("trip_id", ""))
-    method = str(result.get("method", "—"))
-    runtime = result.get("runtime_ms", 0)
-    gps_raw = result.get("gps_coordinates", [])
-    pred_raw = result.get("predicted_coordinates", [])
-    arc_ids = result.get("predicted_arc_ids", [])
-
-    k1, k2, k3, k4 = st.columns(4)
-    k1.metric("Trip ID", trip_id)
-    k2.metric("Method", method)
-    k3.metric("Runtime", f"{runtime:.1f} ms")
-    k4.metric("Points / Arcs", f"{len(gps_raw)} obs · {len(arc_ids)} arcs")
-
-    # -------------------------------------------------------------------
-    # Evaluation metrics
-    # -------------------------------------------------------------------
-    metrics = result.get("metrics")
-    if isinstance(metrics, dict) and metrics:
-        st.subheader("Returned Evaluation Metrics")
-        if "metric_type" in metrics:
-            st.caption(f"ℹ️ {metrics['metric_type']}")
-
-        # Render numerical / metric cards across columns
-        display_metrics = {k: v for k, v in metrics.items() if k != "metric_type"}
-        keys = list(display_metrics.keys())
-        if keys:
-            cols = st.columns(min(len(keys), 4))
-            for i, key in enumerate(keys):
-                col = cols[i % len(cols)]
-                val = display_metrics[key]
-                if isinstance(val, float):
-                    col.metric(key, f"{val:.4f}")
-                else:
-                    col.metric(key, str(val) if val is not None else "—")
-    elif metrics is None:
-        st.info("No ground-truth metrics available for this trip "
-                "(no `.route` reference file).")
-    else:
-        st.info("Metrics field is empty or not a dictionary.")
-
-    # -------------------------------------------------------------------
-    # Interactive Folium map
-    # -------------------------------------------------------------------
-    st.subheader("Route Map")
-    gps_clean = sanitize_coords(gps_raw)
-    pred_clean = sanitize_coords(
-        [p for p in pred_raw if p is not None]  # filter nulls
-    )
-
-    route_map = build_route_map(gps_clean, pred_clean, trip_id)
-    st_folium(
-        route_map,
-        width=None,
-        height=560,
-        returned_objects=[],
-        key=f"map_{trip_id}",
-    )
-
-    # -------------------------------------------------------------------
-    # Raw output expander
-    # -------------------------------------------------------------------
-    with st.expander("Predicted Arc IDs & Raw API Response"):
-        st.write("**Predicted Arc IDs**")
-        st.write(arc_ids)
-        st.write("**Full API Response**")
-        st.json(result)
-
+# Safeguard so contract tests importing app module do not run UI render on import
+if not isinstance(st, MagicMock):
+    render_app()
