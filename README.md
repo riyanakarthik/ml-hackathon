@@ -1,15 +1,151 @@
-# PathSnap: GPS-to-road map matching
+# PathSnap: Distributed Map-Matching & Route Reconstruction
 
-FastAPI backend that snaps a GPS track onto a road graph and returns the matched arc route.
+An end-to-end distributed Machine Learning system that matches noisy GPS observation trajectories to a directed road network using **supervised Random Forest candidate classification**, **Bayesian-optimized Hidden Markov Models (HMM)**, and **Viterbi sequential decoding**.
 
-## Setup and run
+Built for **UE24CS352A — Machine Learning**, PES University.
 
-```bash
-python3 -m venv .venv
-.venv/bin/pip install -r requirements.txt
-.venv/bin/python -m pytest -q                                      # tests
-.venv/bin/uvicorn main:app --host 0.0.0.0 --port 8000              # server
+---
+
+## 🚀 Quick Start: Two-Laptop Demonstration Setup
+
+The system is deployed across two machines connected over Wi-Fi/LAN:
+* **Laptop 1 (Backend Server):** Hosts FastAPI inference server on port `8000`, road network graph, spatial indexer, Random Forest model artifacts, and evaluation logic.
+* **Laptop 2 (Evaluator Dashboard):** Runs Streamlit + Folium map dashboard on port `8501`, connecting live to Laptop 1 over the network.
+
+```text
++------------------------------------+           +------------------------------------+
+|             LAPTOP 2               |           |             LAPTOP 1               |
+|      (Evaluator UI / Presenter)    |           |       (Backend Inference Server)   |
+|                                    |           |                                    |
+|  Streamlit Dashboard               |  HTTP GET |  FastAPI Server (Port 8000)        |
+|  (frontend/app.py on Port 8501)    | --------> |  Local Tangent Plane Projector     |
+|                                    |  /health  |  k-NN Candidate Generator          |
+|  Folium Map Renderer               |  /trips   |  Random Forest Model Artifacts     |
+|  (Blue GPS points, Green Route)    |           |  HMM + Viterbi Decoder (Optuna)    |
+|                                    |  HTTP POST|  Server-Side Metric Calculator     |
+|  Evaluation Metrics & KPIs         | --------> |                                    |
+|  (arc_f1, continuity, runtime_ms)  |  /predict |                                    |
++------------------------------------+           +------------------------------------+
+                   \                               /
+                    \                             /
+                     \                           /
+                      Shared Local Network (Wi-Fi)
 ```
+
+---
+
+### 🖥️ LAPTOP 1: Backend Setup & Run (Person 1)
+
+1. **Clone & Setup Environment:**
+   * **Windows (PowerShell):**
+     ```powershell
+     git clone https://github.com/riyanakarthik/ml-hackathon.git
+     cd ml-hackathon
+     python -m venv .venv
+     .venv\Scripts\activate
+     pip install -r requirements.txt
+     ```
+   * **macOS / Linux:**
+     ```bash
+     git clone https://github.com/riyanakarthik/ml-hackathon.git
+     cd ml-hackathon
+     python3 -m venv .venv
+     source .venv/bin/activate
+     pip install -r requirements.txt
+     ```
+
+2. **Find Laptop 1's Wi-Fi IP Address:**
+   * **Windows:** Run `ipconfig` $\to$ Look for the IPv4 Address under the active Wi-Fi adapter (e.g. `192.168.1.45`).
+   * **macOS / Linux:** Run `ifconfig | grep "inet "` or `ip addr`.
+
+3. **(Windows Only) Allow Port 8000 Through Firewall:**
+   Open PowerShell as Administrator:
+   ```powershell
+   New-NetFirewallRule -DisplayName "PathSnap FastAPI Port 8000" -Direction Inbound -LocalPort 8000 -Protocol TCP -Action Allow -Profile Private
+   ```
+
+4. **Launch the FastAPI Server:**
+   * **Windows (PowerShell):**
+     ```powershell
+     .venv\Scripts\uvicorn main:app --host 0.0.0.0 --port 8000
+     ```
+   * **macOS / Linux:**
+     ```bash
+     .venv/bin/uvicorn main:app --host 0.0.0.0 --port 8000
+     ```
+   *Keep this terminal visible during evaluation so evaluators can inspect incoming inference request logs!*
+
+---
+
+### 💻 LAPTOP 2: Evaluator Dashboard Setup & Run (Person 3 & Person 4)
+
+1. **Clone & Setup Environment:**
+   * **Windows (PowerShell):**
+     ```powershell
+     git clone https://github.com/riyanakarthik/ml-hackathon.git
+     cd ml-hackathon
+     python -m venv .venv
+     .venv\Scripts\activate
+     pip install -r requirements.txt
+     ```
+   * **macOS / Linux:**
+     ```bash
+     git clone https://github.com/riyanakarthik/ml-hackathon.git
+     cd ml-hackathon
+     python3 -m venv .venv
+     source .venv/bin/activate
+     pip install -r requirements.txt
+     ```
+
+2. **Verify Connectivity to Laptop 1:**
+   ```bash
+   curl http://<LAPTOP_1_IP>:8000/health
+   # Expected response: {"status":"ok","default_config":"ml_v3",...}
+   ```
+
+3. **Launch the Streamlit Evaluator Dashboard:**
+   * **Windows (PowerShell):**
+     ```powershell
+     .venv\Scripts\streamlit run frontend/app.py
+     ```
+   * **macOS / Linux:**
+     ```bash
+     .venv/bin/streamlit run frontend/app.py
+     ```
+   Open your browser to `http://localhost:8501`.
+
+4. **Connect UI to Laptop 1:**
+   * In the left sidebar under **Backend Connection**, enter:
+     `http://<LAPTOP_1_IP>:8000` (e.g. `http://192.168.1.45:8000`).
+   * Click **Check Backend Status** $\to$ status turns green: `✅ Backend online`.
+   * Click **Refresh Trips** $\to$ select any evaluation trip (e.g. `00000000` or `00000040`).
+   * Click **🚀 Run Route Reconstruction** to view the live reconstructed route on the Folium map.
+
+---
+
+### 💻 Single-Laptop Local Fallback (Running Everything on One Machine)
+
+If demonstrating on a single machine:
+1. **Terminal 1 (Backend):** `uvicorn main:app --host 0.0.0.0 --port 8000`
+2. **Terminal 2 (Frontend):** `streamlit run frontend/app.py`
+3. In your browser at `http://localhost:8501`, keep backend URL as `http://localhost:8000`.
+
+---
+
+### 🧪 Automated Testing & Verification
+
+Run all unit, contract, and machine learning tests:
+```bash
+pytest -v
+```
+Run end-to-end verification across all 10 evaluation trips:
+```bash
+python frontend/verify_evaluation_trips.py
+```
+
+---
+
+## Technical Overview & Data Layout
 
 Data is read from `Student folder/` by default. Override it with `PATHSNAP_DATA_DIR=/path/to/data`; the layout is `<dir>/<split>/<trip_id>/<trip_id>.{track,nodes,arcs[,route]}`.
 
