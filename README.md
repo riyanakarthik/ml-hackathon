@@ -98,4 +98,14 @@ Error diagnostics (`route_diagnostics`) assign each false-positive arc to exactl
 
 On the held-out trips, 13 of 16 improved, 2 were unchanged and 1 was slightly worse (−0.0013). On student-test, 9 of 10 improved and 1 was unchanged. Observation-level Macro F1 fell slightly (held-out 0.833 → 0.827). Runtimes use 8 worker processes and exclude the network build.
 
-The earlier baseline numbers for all 80 train trips (F1 0.861, P 0.785, R 0.986) were measured before this split existed.
+HMM parameters (k = 8, radius 50 m, β = 15 m) are hand-set defaults. They were not tuned on either split.
+
+## Frontend — Evaluator Dashboard
+
+An interactive **Streamlit + Folium** web UI that connects to this FastAPI backend over the network.  See [`frontend/README.md`](frontend/README.md) for details.
+
+```bash
+cd frontend
+pip install -r requirements.txt
+streamlit run app.py          # connects to http://localhost:8000 by default
+```
