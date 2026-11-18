@@ -1,8 +1,9 @@
 # PathSnap System Architecture & Technical Explanation
 
 **Project:** Distributed Map-Matching & Route Reconstruction  
-**Course:** UE24CS352A — Machine Learning, PES University  
-**Authors:** Team PathSnap (Persons 1, 2, 3, 4)
+**Course:** UE24CS352A — Machine Learning, PES University (RR Campus)  
+**Team ID:** PT-056  
+**Members:** RIYANA KARTHIK VISHALAKSHI (PES1UG24AM226), ROHANTH GANESHA C (PES1UG24AM227), ROHIT CHAKI (PES1UG24AM228), ROHITH KARNING (PES1UG24AM229)
 
 ---
 

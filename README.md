@@ -4,9 +4,17 @@ An end-to-end distributed Machine Learning system that matches noisy GPS observa
 
 Built for **UE24CS352A — Machine Learning**, PES University.
 
+### Team: PT-056
+| Sl. No. | Student Name | SRN |
+|:---:|:---|:---|
+| 1 | RIYANA KARTHIK VISHALAKSHI | PES1UG24AM226 |
+| 2 | ROHANTH GANESHA C | PES1UG24AM227 |
+| 3 | ROHIT CHAKI | PES1UG24AM228 |
+| 4 | ROHITH KARNING | PES1UG24AM229 |
+
 ---
 
-## 🚀 Quick Start: Two-Laptop Demonstration Setup
+## Quick Start: Two-Laptop Demonstration Setup
 
 The system is deployed across two machines connected over Wi-Fi/LAN:
 * **Laptop 1 (Backend Server):** Hosts FastAPI inference server on port `8000`, road network graph, spatial indexer, Random Forest model artifacts, and evaluation logic.
@@ -34,8 +42,21 @@ The system is deployed across two machines connected over Wi-Fi/LAN:
 
 ---
 
-### 🖥️ LAPTOP 1: Backend Setup & Run (Person 1)
+### LAPTOP 1: Backend Setup & Run
 
+#### Method A: 1-Click Launcher (Recommended)
+* **Windows:** Double-click or run:
+  ```powershell
+  .\run_backend.bat
+  ```
+  *(Automatically detects/creates `.venv`, installs requirements, displays this laptop's Wi-Fi IP address, and starts FastAPI on `0.0.0.0:8000`)*
+* **macOS / Linux:**
+  ```bash
+  chmod +x run_backend.sh
+  ./run_backend.sh
+  ```
+
+#### Method B: Manual Commands
 1. **Clone & Setup Environment:**
    * **Windows (PowerShell):**
      ```powershell
@@ -77,8 +98,21 @@ The system is deployed across two machines connected over Wi-Fi/LAN:
 
 ---
 
-### 💻 LAPTOP 2: Evaluator Dashboard Setup & Run (Person 3 & Person 4)
+### LAPTOP 2: Evaluator Dashboard Setup & Run
 
+#### Method A: 1-Click Launcher (Recommended)
+* **Windows:** Double-click or run:
+  ```powershell
+  .\run_frontend.bat
+  ```
+  *(Automatically detects/creates `.venv`, installs dependencies, and launches Streamlit dashboard at `http://localhost:8501`)*
+* **macOS / Linux:**
+  ```bash
+  chmod +x run_frontend.sh
+  ./run_frontend.sh
+  ```
+
+#### Method B: Manual Commands
 1. **Clone & Setup Environment:**
    * **Windows (PowerShell):**
      ```powershell
@@ -117,26 +151,37 @@ The system is deployed across two machines connected over Wi-Fi/LAN:
 4. **Connect UI to Laptop 1:**
    * In the left sidebar under **Backend Connection**, enter:
      `http://<LAPTOP_1_IP>:8000` (e.g. `http://192.168.1.45:8000`).
-   * Click **Check Backend Status** $\to$ status turns green: `✅ Backend online`.
+   * Click **Check Backend Status** $\to$ status turns green: `Backend online`.
    * Click **Refresh Trips** $\to$ select any evaluation trip (e.g. `00000000` or `00000040`).
-   * Click **🚀 Run Route Reconstruction** to view the live reconstructed route on the Folium map.
+   * Click **Run Route Reconstruction** to view the live reconstructed route on the Folium map.
 
 ---
 
-### 💻 Single-Laptop Local Fallback (Running Everything on One Machine)
+### Single-Laptop Local Fallback (Running Everything on One Machine)
 
 If demonstrating on a single machine:
-1. **Terminal 1 (Backend):** `uvicorn main:app --host 0.0.0.0 --port 8000`
-2. **Terminal 2 (Frontend):** `streamlit run frontend/app.py`
+1. **Terminal 1 (Backend):** `.\run_backend.bat` (or `uvicorn main:app --host 0.0.0.0 --port 8000`)
+2. **Terminal 2 (Frontend):** `.\run_frontend.bat` (or `streamlit run frontend/app.py`)
 3. In your browser at `http://localhost:8501`, keep backend URL as `http://localhost:8000`.
 
 ---
 
-### 🧪 Automated Testing & Verification
+### Automated Testing & Verification
 
-Run all unit, contract, and machine learning tests:
+Run 1-click verification (all unit, contract, and 10-trip E2E tests):
+* **Windows:**
+  ```powershell
+  .\verify_system.bat
+  ```
+* **macOS / Linux:**
+  ```bash
+  chmod +x verify_system.sh
+  ./verify_system.sh
+  ```
+Or run pytest manually:
 ```bash
 pytest -v
+python frontend/verify_evaluation_trips.py
 ```
 Run end-to-end verification across all 10 evaluation trips:
 ```bash

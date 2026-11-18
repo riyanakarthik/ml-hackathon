@@ -1,0 +1,40 @@
+{
+  "partitions": {
+    "train": {
+      "trips": 80,
+      "gps_points_total": 208417,
+      "gps_points_median": 1529.0,
+      "gps_points_min": 361,
+      "gps_points_max": 19313,
+      "nodes_median": 9608.0,
+      "arcs_median": 19526.5,
+      "route_arcs_median": 280.0,
+      "mean_share_1s_steps": 0.938296103658152,
+      "max_gap_s": 153064.0,
+      "trips_with_gaps_gt_10s": 40,
+      "mean_reverse_twin_frac": 0.9216733541064445,
+      "trips_with_repeated_route_arcs": 9,
+      "trips_with_discontinuous_reference": 10
+    },
+    "student_test": {
+      "trips": 10,
+      "gps_points_total": 19160,
+      "gps_points_median": 1420.0,
+      "gps_points_min": 262,
+      "gps_points_max": 3958,
+      "nodes_median": 6596.5,
+      "arcs_median": 13145.0,
+      "route_arcs_median": 250.0,
+      "mean_share_1s_steps": 0.9819896936551981,
+      "max_gap_s": 210.0,
+      "trips_with_gaps_gt_10s": 2,
+      "mean_reverse_twin_frac": 0.926940290876092,
+      "trips_with_repeated_route_arcs": 1,
+      "trips_with_discontinuous_reference": 1
+    }
+  },
+  "missing_files": 0,
+  "non_finite_values": 0,
+  "out_of_range_coords": 0,
+  "invalid_node_refs": 0
+}

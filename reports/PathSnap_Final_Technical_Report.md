@@ -4,8 +4,11 @@
 
 UE24CS352A: Machine Learning — PathSnap Hackathon (PES University, Department of CSE, RR Campus)  
 Repository: github.com/riyanakarthik/ml-hackathon  
-Evidence snapshot: git 627c448 · frozen model commit 8459a04  
-Team name / members / SRNs: not recorded in the project materials — to be added by the team before submission (repository contributors in git history: Riyana, Rohith Karning).  
+**Team ID: PT-056**  
+RIYANA KARTHIK VISHALAKSHI (PES1UG24AM226)  
+ROHANTH GANESHA C (PES1UG24AM227)  
+ROHIT CHAKI (PES1UG24AM228)  
+ROHITH KARNING (PES1UG24AM229)  
 
 *Table of contents: see the PDF/DOCX versions.*
 
@@ -67,7 +70,7 @@ Each trip directory holds four whitespace-separated files without headers (verif
 
 *Table 3. Dataset inventory per partition. Source: reports/data/dataset_overview_summary.csv (train/student_test computed from the files; evaluator_test from the frozen evaluation manifest).*
 
-![Figure 1. Per-trip size of the GPS trace, the road network and the reference route for each partition (log scale for the first two panels).](figures/fig_dataset_overview.png)
+![Figure 1. Per-trip size of the GPS trace, the road network and the reference route for each partition (log scale for the first two panels).](figures\fig_dataset_overview.png)
 
 *Figure 1. Per-trip size of the GPS trace, the road network and the reference route for each partition (log scale for the first two panels).*
 
@@ -89,7 +92,7 @@ Each trip directory holds four whitespace-separated files without headers (verif
 
 ## 4  System Architecture
 
-![Figure 2. End-to-end pipeline. Steps 1–6 use only .track, .nodes and .arcs; the reference .route is read only by the server-side evaluation after prediction.](figures/fig_architecture.png)
+![Figure 2. End-to-end pipeline. Steps 1–6 use only .track, .nodes and .arcs; the reference .route is read only by the server-side evaluation after prediction.](figures\fig_architecture.png)
 
 *Figure 2. End-to-end pipeline. Steps 1–6 use only .track, .nodes and .arcs; the reference .route is read only by the server-side evaluation after prediction.*
 
@@ -124,7 +127,7 @@ Because .route is an ordered arc sequence and not a label per observation, super
 
 *Table 5. Alignment quality. Sources: experiments/final/label_verification.csv, experiments/ml/alignment_quality.csv, reports/data/training_dataset_stats.json.*
 
-![Figure 3. Alignment on training trip 00000018, whose route repeats arcs around a roundabout. GPS points are coloured by aligned route position; orange lines join points to their label arc.](figures/alignment_00000018.png)
+![Figure 3. Alignment on training trip 00000018, whose route repeats arcs around a roundabout. GPS points are coloured by aligned route position; orange lines join points to their label arc.](figures\alignment_00000018.png)
 
 *Figure 3. Alignment on training trip 00000018, whose route repeats arcs around a roundabout. GPS points are coloured by aligned route position; orange lines join points to their label arc.*
 
@@ -220,11 +223,11 @@ Two components were optimised separately, and only one search is complete. The H
 
 *Table 7. Decoder search: Optuna TPESampler(seed=42, multivariate, 20 start-up trials), 150 trials; objective = mean route arc F1 on the 64 tune trips; trial 0 = untuned configuration. Sources: experiments/optuna_trials.csv, experiments/optuna_study.db, configs/tuned_v2.json.*
 
-![Figure 4. Decoder optimisation history: objective rose from 0.8466 (trial 0, untuned) to 0.9398 (trial 133).](figures/fig_decoder_optuna_history.png)
+![Figure 4. Decoder optimisation history: objective rose from 0.8466 (trial 0, untuned) to 0.9398 (trial 133).](figures\fig_decoder_optuna_history.png)
 
 *Figure 4. Decoder optimisation history: objective rose from 0.8466 (trial 0, untuned) to 0.9398 (trial 133).*
 
-![Figure 5. Tuned versus untuned decoder on the selection set and on two sets not used for tuning (holdout 16 training trips, student test).](figures/fig_decoder_tuned_vs_untuned.png)
+![Figure 5. Tuned versus untuned decoder on the selection set and on two sets not used for tuning (holdout 16 training trips, student test).](figures\fig_decoder_tuned_vs_untuned.png)
 
 *Figure 5. Tuned versus untuned decoder on the selection set and on two sets not used for tuning (holdout 16 training trips, student test).*
 
@@ -254,7 +257,7 @@ Search space: n_estimators 50–300 (step 25), max_depth 6–30, min_samples_lea
 
 > **Not done:** the tuned Random Forest was never refitted, evaluated on student test, or deployed, so the untuned-versus-tuned comparison of the classifier required by Deliverables §4 (CV macro F1, student-test Top-1 and macro F1, log loss, inference time) does not exist. The deployed Random Forest uses the initial hyperparameters in Section 6.3. Sources: experiments/ml/rf_optuna_trials_partial.csv, experiments/ml/rf_optuna_study.db.
 
-![Figure 6. Random Forest search history (completed trials only).](figures/fig_rf_optuna_history.png)
+![Figure 6. Random Forest search history (completed trials only).](figures\fig_rf_optuna_history.png)
 
 *Figure 6. Random Forest search history (completed trials only).*
 
@@ -308,7 +311,7 @@ Search space: n_estimators 50–300 (step 25), max_depth 6–30, min_samples_lea
 
 *Table 11. Cross-validation on 64 tune trips (out-of-fold, valid-label rows, threshold 0.5; pseudo-labels). Source: experiments/ml/cv_model_comparison.csv.*
 
-![Figure 7. Five-model cross-validation comparison: macro F1 and log loss (mean ± sd over five trip-grouped folds).](figures/fig_cv_model_comparison.png)
+![Figure 7. Five-model cross-validation comparison: macro F1 and log loss (mean ± sd over five trip-grouped folds).](figures\fig_cv_model_comparison.png)
 
 *Figure 7. Five-model cross-validation comparison: macro F1 and log loss (mean ± sd over five trip-grouped folds).*
 
@@ -324,15 +327,15 @@ Search space: n_estimators 50–300 (step 25), max_depth 6–30, min_samples_lea
 
 *Table 12. Student-test comparison (10 trips), reported after models were frozen. Classifier columns use pseudo-labels; the last column is route-level against .route. The 80-trip row is not an equal-data comparison with the 64-trip rows. Source: experiments/ml/student_test_model_report.csv.*
 
-![Figure 8. Student-test Top-1 accuracy and macro F1 for the five models (all trained on the same 64 trips).](figures/fig_student_test_top1_macro_f1.png)
+![Figure 8. Student-test Top-1 accuracy and macro F1 for the five models (all trained on the same 64 trips).](figures\fig_student_test_top1_macro_f1.png)
 
 *Figure 8. Student-test Top-1 accuracy and macro F1 for the five models (all trained on the same 64 trips).*
 
-![Figure 9. Out-of-fold confusion matrices at threshold 0.5 (64 tune trips, valid-label rows).](figures/fig_confusion_matrices.png)
+![Figure 9. Out-of-fold confusion matrices at threshold 0.5 (64 tune trips, valid-label rows).](figures\fig_confusion_matrices.png)
 
 *Figure 9. Out-of-fold confusion matrices at threshold 0.5 (64 tune trips, valid-label rows).*
 
-![Figure 10. Training (in-sample) versus out-of-fold CV metrics — evidence for over/underfitting.](figures/fig_train_vs_cv.png)
+![Figure 10. Training (in-sample) versus out-of-fold CV metrics — evidence for over/underfitting.](figures\fig_train_vs_cv.png)
 
 *Figure 10. Training (in-sample) versus out-of-fold CV metrics — evidence for over/underfitting.*
 
@@ -352,17 +355,17 @@ All variants share the candidate generation, decoder parameters, emission weight
 
 *Table 13. Ablation, mean route arc F1 (last column: order-aware sequence F1). Source: experiments/final/ablation_summary.csv.*
 
-![Figure 11. What each component contributes, with equal training data.](figures/fig_ablation_route_f1.png)
+![Figure 11. What each component contributes, with equal training data.](figures\fig_ablation_route_f1.png)
 
 *Figure 11. What each component contributes, with equal training data.*
 
-![Figure 12. Classifier-only versus classifier + HMM for every model; dashed line = geometric HMM.](figures/fig_classifier_only_vs_hmm.png)
+![Figure 12. Classifier-only versus classifier + HMM for every model; dashed line = geometric HMM.](figures\fig_classifier_only_vs_hmm.png)
 
 *Figure 12. Classifier-only versus classifier + HMM for every model; dashed line = geometric HMM.*
 
 The HMM is the decisive component (+0.17 to +0.27 route F1 over classifier-only on holdout and student test). Tree-model emissions add a small gain over geometric emissions (+0.003 to +0.006 on the same sets), while Logistic Regression emissions give none (-0.0003 holdout, -0.0013 student test). Figure 13 shows the per-trip effect of replacing geometric emissions by Random Forest emissions: some trips get worse, so the gain is not uniform.
 
-![Figure 13. Per-trip change in route F1 from geometric HMM to RF + HMM (RF trained on 64 trips).](figures/fig_per_trip_delta.png)
+![Figure 13. Per-trip change in route F1 from geometric HMM to RF + HMM (RF trained on 64 trips).](figures\fig_per_trip_delta.png)
 
 *Figure 13. Per-trip change in route F1 from geometric HMM to RF + HMM (RF trained on 64 trips).*
 
@@ -380,7 +383,7 @@ The 10 evaluator_test trips (ids disjoint from all other partitions) include .ro
 
 *Table 14. evaluator_test results (directed arc-set metrics vs .route; runtime = server time per request, model pre-loaded, Apple M5). Source: experiments/final_evaluation/evaluation_summary.json.*
 
-![Figure 14. Per-trip route F1 on evaluator_test: geometric HMM versus deployed RF + HMM.](figures/route_f1_comparison.png)
+![Figure 14. Per-trip route F1 on evaluator_test: geometric HMM versus deployed RF + HMM.](figures\route_f1_comparison.png)
 
 *Figure 14. Per-trip route F1 on evaluator_test: geometric HMM versus deployed RF + HMM.*
 
@@ -431,7 +434,7 @@ All 10 trips were predicted without failure, deterministically, with valid arc i
 
 *Table 17. Each false-positive arc gets exactly one category. Source: experiments/final_evaluation/route_error_analysis.csv.*
 
-![Figure 15. False-positive sources on student test (RF trained on 64 trips).](figures/fig_fp_breakdown_student_test.png)
+![Figure 15. False-positive sources on student test (RF trained on 64 trips).](figures\fig_fp_breakdown_student_test.png)
 
 *Figure 15. False-positive sources on student test (RF trained on 64 trips).*
 
@@ -442,7 +445,7 @@ All 10 trips were predicted without failure, deterministically, with valid arc i
 - **Reference truncation** (training trips 00000033 and 00000054) makes correct matches after the route end count as false positives; route precision on such trips understates quality.
 - **Computational cost:** deployed mean 334 ms per evaluator trip (max 755 ms) versus 280 ms for the geometric HMM; the extra time is feature extraction and Random Forest inference.
 
-![Figure 16. Server runtime per evaluator trip against trip length.](figures/runtime_distribution.png)
+![Figure 16. Server runtime per evaluator trip against trip length.](figures\runtime_distribution.png)
 
 *Figure 16. Server runtime per evaluator trip against trip length.*
 
@@ -450,11 +453,11 @@ All 10 trips were predicted without failure, deterministically, with valid arc i
 
 Interactive maps are generated by code in the repository from the deployed model's actual predictions (reports/tooling/build_assets.py; earlier map code: scripts/validate_alignment.py, scripts/final_eval_artifacts.py). Each map shows the original GPS observations, the road-network geometry around the trip, the reference route and the predicted route, colour-coded into arcs that are in .route, extra arcs and missed reference arcs, with a legend, a layer control and an extent fitted to the trip. Student-test trips are used so the maps can be published; maps of evaluator trips exist locally but are not reproduced because they draw evaluator ground truth.
 
-![Figure 17. Folium map, student-test trip 00000077 (largest RF + HMM gain over the geometric HMM; arc F1 0.9693, identical to the recorded value). Headless-browser screenshot of reports/figures/maps/student_test_00000077_route_map.html.](figures/folium_screenshot_student_test_00000077.png)
+![Figure 17. Folium map, student-test trip 00000077 (largest RF + HMM gain over the geometric HMM; arc F1 0.9693, identical to the recorded value). Headless-browser screenshot of reports/figures/maps/student_test_00000077_route_map.html.](figures\folium_screenshot_student_test_00000077.png)
 
 *Figure 17. Folium map, student-test trip 00000077 (largest RF + HMM gain over the geometric HMM; arc F1 0.9693, identical to the recorded value). Headless-browser screenshot of reports/figures/maps/student_test_00000077_route_map.html.*
 
-![Figure 18. Folium map, student-test trip 00000076 (lowest RF + HMM F1 on student test, 0.9512). Screenshot of reports/figures/maps/student_test_00000076_route_map.html.](figures/folium_screenshot_student_test_00000076.png)
+![Figure 18. Folium map, student-test trip 00000076 (lowest RF + HMM F1 on student test, 0.9512). Screenshot of reports/figures/maps/student_test_00000076_route_map.html.](figures\folium_screenshot_student_test_00000076.png)
 
 *Figure 18. Folium map, student-test trip 00000076 (lowest RF + HMM F1 on student test, 0.9512). Screenshot of reports/figures/maps/student_test_00000076_route_map.html.*
 
@@ -616,11 +619,11 @@ As required by Deliverables §8, the team discloses that an AI coding assistant 
 
 ### A.4 Static renderings of the route maps
 
-![Figure 19. Route map for student-test trip 00000077 (largest gain of RF + HMM over geometric HMM): road network, GPS, reference and predicted route. Static rendering of the same layers as the interactive Folium map reports/figures/maps/student_test_00000077_route_map.html.](figures/fig_route_map_student_test_00000077.png)
+![Figure 19. Route map for student-test trip 00000077 (largest gain of RF + HMM over geometric HMM): road network, GPS, reference and predicted route. Static rendering of the same layers as the interactive Folium map reports/figures/maps/student_test_00000077_route_map.html.](figures\fig_route_map_student_test_00000077.png)
 
 *Figure 19. Route map for student-test trip 00000077 (largest gain of RF + HMM over geometric HMM): road network, GPS, reference and predicted route. Static rendering of the same layers as the interactive Folium map reports/figures/maps/student_test_00000077_route_map.html.*
 
-![Figure 20. Route map for student-test trip 00000076 (lowest RF + HMM F1 on student test). Interactive version: reports/figures/maps/student_test_00000076_route_map.html.](figures/fig_route_map_student_test_00000076.png)
+![Figure 20. Route map for student-test trip 00000076 (lowest RF + HMM F1 on student test). Interactive version: reports/figures/maps/student_test_00000076_route_map.html.](figures\fig_route_map_student_test_00000076.png)
 
 *Figure 20. Route map for student-test trip 00000076 (lowest RF + HMM F1 on student test). Interactive version: reports/figures/maps/student_test_00000076_route_map.html.*
 

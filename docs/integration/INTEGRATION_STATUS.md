@@ -1,8 +1,9 @@
 # PathSnap Integration Status Report
 
-**Last Updated:** November 18, 2026  
-**Auditor / Integrator:** Person 4 (Integrator / Presenter, Laptop 2)  
-**Overall Status:** **DEMONSTRATION & INTEGRATION READY** (All 54 unit/ML/contract tests passing; 10 evaluation trips verified end-to-end at 0.9755 mean F1 and 0.9989 continuity).
+**Team ID:** PT-056  
+**Members:** RIYANA KARTHIK VISHALAKSHI (PES1UG24AM226), ROHANTH GANESHA C (PES1UG24AM227), ROHIT CHAKI (PES1UG24AM228), ROHITH KARNING (PES1UG24AM229)  
+**Course:** UE24CS352A — Machine Learning, PES University (RR Campus)  
+**Overall Status:** **DEMONSTRATION & INTEGRATION READY** (All 65 unit/ML/robustness/contract tests passing; 10 evaluation trips verified end-to-end at 0.9755 mean F1 and 0.9989 continuity).
 
 ---
 
@@ -13,7 +14,8 @@
 | **Frontend Contract & Map Suite** | `frontend/test_contract.py` | 20 | 20 | 0 | **100% PASS** |
 | **Machine Learning Suite** | `tests/test_ml.py` | 11 | 11 | 0 | **100% PASS** |
 | **Backend Inference & HMM Suite** | `tests/test_pathsnap.py` | 23 | 23 | 0 | **100% PASS** |
-| **Total Automated Tests** | | **54** | **54** | **0** | **ALL PASSED** |
+| **Edge-Case Robustness Suite** | `tests/test_robustness.py` | 11 | 11 | 0 | **100% PASS** |
+| **Total Automated Tests** | | **65** | **65** | **0** | **ALL PASSED** |
 
 ---
 
@@ -39,16 +41,16 @@ Executed via `frontend/verify_evaluation_trips.py` connecting the frontend API c
 
 ## 3. Component Integration Matrix
 
-| Component | Owner | Git Status | Code Review Status | Integration Status |
+| Component | Subsystem | Git Status | Code Review Status | Integration Status |
 |---|---|---|---|---|
-| **FastAPI Backend Server** | Person 1 | `main` | Endpoints `/health`, `/trips`, `/predict` verified with `ml_v3`. | **Integrated & Verified** |
-| **Data Loader & Validation** | Person 1 | `main` | Never reads `.route`. Preserves data integrity. | **Integrated & Verified** |
-| **Geometric Nearest Baseline** | Person 1 | `main` | `greedy_continuity_decode` verified. | **Integrated & Verified** |
-| **HMM + Viterbi Decoder** | Person 1 | `main` | `hmm_viterbi_decode` with Dijkstra route fill verified. | **Integrated & Verified** |
-| **5 Machine Learning Classifiers** | Person 1 | `main` | Random Forest, Extra Trees, HistGradientBoosting, Decision Tree, Logistic Regression models and joblib artifacts landed. | **Integrated & Verified** |
-| **Bayesian Optuna Optimization** | Person 1 | `main` | `scripts/tune.py`, trials database, `tuned_v2.json`, `ml_v3.json`. | **Integrated & Verified** |
-| **Dataset Validation & EDA** | Person 2 | `main` | Alignment plots, CV metrics, and student test comparison tables generated in `experiments/ml/`. | **Integrated & Verified** |
-| **Streamlit Evaluator UI** | Person 3 | `main` | Dark console dashboard with live KPI cards, layer controls, and trip selector. | **Integrated & Verified** |
-| **Folium Map Visualization** | Person 3 | `main` | OpenStreetMap base, blue GPS observations, green route polyline. | **Integrated & Verified** |
-| **Two-Laptop LAN Connectivity** | Person 4 | Ready | Verification procedure documented in `LAN_SETUP.md`. | **Awaiting Live Pair Test** |
-| **Consolidated PDF Report** | All | Pending | Needs experimental metrics & screenshots. | **Pending Team** |
+| **FastAPI Backend Server** | Backend API | `main` | Endpoints `/health`, `/trips`, `/predict` verified with `ml_v3`. | **Integrated & Verified** |
+| **Data Loader & Validation** | Data Pipeline | `main` | Never reads `.route`. Preserves data integrity. | **Integrated & Verified** |
+| **Geometric Nearest Baseline** | Baseline Decoder | `main` | `greedy_continuity_decode` verified. | **Integrated & Verified** |
+| **HMM + Viterbi Decoder** | HMM Decoder | `main` | `hmm_viterbi_decode` with Dijkstra route fill verified. | **Integrated & Verified** |
+| **5 Machine Learning Classifiers** | Machine Learning | `main` | Random Forest, Extra Trees, HistGradientBoosting, Decision Tree, Logistic Regression models and joblib artifacts landed. | **Integrated & Verified** |
+| **Bayesian Optuna Optimization** | Optimization | `main` | `scripts/tune.py`, trials database, `tuned_v2.json`, `ml_v3.json`. | **Integrated & Verified** |
+| **Dataset Validation & EDA** | Analysis / EDA | `main` | Alignment plots, CV metrics, and student test comparison tables generated in `experiments/ml/`. | **Integrated & Verified** |
+| **Streamlit Evaluator UI** | Frontend UI | `main` | Dark console dashboard with live KPI cards, layer controls, and trip selector. | **Integrated & Verified** |
+| **Folium Map Visualization** | Visualization | `main` | OpenStreetMap base, blue GPS observations, green route polyline. | **Integrated & Verified** |
+| **Two-Laptop LAN Connectivity** | Deployment | Ready | Verification procedure and launcher scripts documented in `LAN_SETUP.md`. | **Ready for Live Pair Demo** |
+| **Consolidated PDF Report** | Documentation | `main` | Final report compiled with figures and ablation analysis at `reports/PathSnap_Final_Technical_Report.pdf`. | **Compiled & Ready** |

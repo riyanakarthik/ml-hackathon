@@ -1,5 +1,8 @@
 # PathSnap Frontend — Evaluator Dashboard
 
+**Team ID:** PT-056 (UE24CS352A — PES University, RR Campus)  
+**Members:** RIYANA KARTHIK VISHALAKSHI (PES1UG24AM226), ROHANTH GANESHA C (PES1UG24AM227), ROHIT CHAKI (PES1UG24AM228), ROHITH KARNING (PES1UG24AM229)  
+
 Interactive **Streamlit + Folium** web application for visualising GPS route-reconstruction results produced by the PathSnap FastAPI backend.
 
 > [!IMPORTANT]

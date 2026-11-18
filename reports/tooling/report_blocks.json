@@ -6,8 +6,11 @@
   "lines": [
    "UE24CS352A: Machine Learning — PathSnap Hackathon (PES University, Department of CSE, RR Campus)",
    "Repository: github.com/riyanakarthik/ml-hackathon",
-   "Evidence snapshot: git 627c448 · frozen model commit 8459a04",
-   "Team name / members / SRNs: not recorded in the project materials — to be added by the team before submission (repository contributors in git history: Riyana, Rohith Karning)."
+   "**Team ID: PT-056**",
+   "RIYANA KARTHIK VISHALAKSHI (PES1UG24AM226)",
+   "ROHANTH GANESHA C (PES1UG24AM227)",
+   "ROHIT CHAKI (PES1UG24AM228)",
+   "ROHITH KARNING (PES1UG24AM229)"
   ]
  },
  {
@@ -219,7 +222,7 @@
  },
  {
   "t": "fig",
-  "path": "/Users/riyana/Desktop/ml-hackathon/reports/figures/fig_dataset_overview.png",
+  "path": "C:\\Users\\Rohanth Ganesha C\\Documents\\ML Hackathon\\reports\\figures\\fig_dataset_overview.png",
   "caption": "Figure 1. Per-trip size of the GPS trace, the road network and the reference route for each partition (log scale for the first two panels).",
   "width": 1.0,
   "px": [
@@ -301,7 +304,7 @@
  },
  {
   "t": "fig",
-  "path": "/Users/riyana/Desktop/ml-hackathon/reports/figures/fig_architecture.png",
+  "path": "C:\\Users\\Rohanth Ganesha C\\Documents\\ML Hackathon\\reports\\figures\\fig_architecture.png",
   "caption": "Figure 2. End-to-end pipeline. Steps 1–6 use only .track, .nodes and .arcs; the reference .route is read only by the server-side evaluation after prediction.",
   "width": 1.0,
   "px": [
@@ -390,7 +393,7 @@
  },
  {
   "t": "fig",
-  "path": "/Users/riyana/Desktop/ml-hackathon/reports/figures/alignment_00000018.png",
+  "path": "C:\\Users\\Rohanth Ganesha C\\Documents\\ML Hackathon\\reports\\figures\\alignment_00000018.png",
   "caption": "Figure 3. Alignment on training trip 00000018, whose route repeats arcs around a roundabout. GPS points are coloured by aligned route position; orange lines join points to their label arc.",
   "width": 1.0,
   "px": [
@@ -657,7 +660,7 @@
  },
  {
   "t": "fig",
-  "path": "/Users/riyana/Desktop/ml-hackathon/reports/figures/fig_decoder_optuna_history.png",
+  "path": "C:\\Users\\Rohanth Ganesha C\\Documents\\ML Hackathon\\reports\\figures\\fig_decoder_optuna_history.png",
   "caption": "Figure 4. Decoder optimisation history: objective rose from 0.8466 (trial 0, untuned) to 0.9398 (trial 133).",
   "width": 1.0,
   "px": [
@@ -667,7 +670,7 @@
  },
  {
   "t": "fig",
-  "path": "/Users/riyana/Desktop/ml-hackathon/reports/figures/fig_decoder_tuned_vs_untuned.png",
+  "path": "C:\\Users\\Rohanth Ganesha C\\Documents\\ML Hackathon\\reports\\figures\\fig_decoder_tuned_vs_untuned.png",
   "caption": "Figure 5. Tuned versus untuned decoder on the selection set and on two sets not used for tuning (holdout 16 training trips, student test).",
   "width": 1.0,
   "px": [
@@ -801,7 +804,7 @@
  },
  {
   "t": "fig",
-  "path": "/Users/riyana/Desktop/ml-hackathon/reports/figures/fig_rf_optuna_history.png",
+  "path": "C:\\Users\\Rohanth Ganesha C\\Documents\\ML Hackathon\\reports\\figures\\fig_rf_optuna_history.png",
   "caption": "Figure 6. Random Forest search history (completed trials only).",
   "width": 0.85,
   "px": [
@@ -1017,7 +1020,7 @@
  },
  {
   "t": "fig",
-  "path": "/Users/riyana/Desktop/ml-hackathon/reports/figures/fig_cv_model_comparison.png",
+  "path": "C:\\Users\\Rohanth Ganesha C\\Documents\\ML Hackathon\\reports\\figures\\fig_cv_model_comparison.png",
   "caption": "Figure 7. Five-model cross-validation comparison: macro F1 and log loss (mean ± sd over five trip-grouped folds).",
   "width": 1.0,
   "px": [
@@ -1115,7 +1118,7 @@
  },
  {
   "t": "fig",
-  "path": "/Users/riyana/Desktop/ml-hackathon/reports/figures/fig_student_test_top1_macro_f1.png",
+  "path": "C:\\Users\\Rohanth Ganesha C\\Documents\\ML Hackathon\\reports\\figures\\fig_student_test_top1_macro_f1.png",
   "caption": "Figure 8. Student-test Top-1 accuracy and macro F1 for the five models (all trained on the same 64 trips).",
   "width": 1.0,
   "px": [
@@ -1125,7 +1128,7 @@
  },
  {
   "t": "fig",
-  "path": "/Users/riyana/Desktop/ml-hackathon/reports/figures/fig_confusion_matrices.png",
+  "path": "C:\\Users\\Rohanth Ganesha C\\Documents\\ML Hackathon\\reports\\figures\\fig_confusion_matrices.png",
   "caption": "Figure 9. Out-of-fold confusion matrices at threshold 0.5 (64 tune trips, valid-label rows).",
   "width": 1.0,
   "px": [
@@ -1135,7 +1138,7 @@
  },
  {
   "t": "fig",
-  "path": "/Users/riyana/Desktop/ml-hackathon/reports/figures/fig_train_vs_cv.png",
+  "path": "C:\\Users\\Rohanth Ganesha C\\Documents\\ML Hackathon\\reports\\figures\\fig_train_vs_cv.png",
   "caption": "Figure 10. Training (in-sample) versus out-of-fold CV metrics — evidence for over/underfitting.",
   "width": 1.0,
   "px": [
@@ -1201,7 +1204,7 @@
  },
  {
   "t": "fig",
-  "path": "/Users/riyana/Desktop/ml-hackathon/reports/figures/fig_ablation_route_f1.png",
+  "path": "C:\\Users\\Rohanth Ganesha C\\Documents\\ML Hackathon\\reports\\figures\\fig_ablation_route_f1.png",
   "caption": "Figure 11. What each component contributes, with equal training data.",
   "width": 1.0,
   "px": [
@@ -1211,7 +1214,7 @@
  },
  {
   "t": "fig",
-  "path": "/Users/riyana/Desktop/ml-hackathon/reports/figures/fig_classifier_only_vs_hmm.png",
+  "path": "C:\\Users\\Rohanth Ganesha C\\Documents\\ML Hackathon\\reports\\figures\\fig_classifier_only_vs_hmm.png",
   "caption": "Figure 12. Classifier-only versus classifier + HMM for every model; dashed line = geometric HMM.",
   "width": 1.0,
   "px": [
@@ -1225,7 +1228,7 @@
  },
  {
   "t": "fig",
-  "path": "/Users/riyana/Desktop/ml-hackathon/reports/figures/fig_per_trip_delta.png",
+  "path": "C:\\Users\\Rohanth Ganesha C\\Documents\\ML Hackathon\\reports\\figures\\fig_per_trip_delta.png",
   "caption": "Figure 13. Per-trip change in route F1 from geometric HMM to RF + HMM (RF trained on 64 trips).",
   "width": 1.0,
   "px": [
@@ -1323,7 +1326,7 @@
  },
  {
   "t": "fig",
-  "path": "/Users/riyana/Desktop/ml-hackathon/reports/figures/route_f1_comparison.png",
+  "path": "C:\\Users\\Rohanth Ganesha C\\Documents\\ML Hackathon\\reports\\figures\\route_f1_comparison.png",
   "caption": "Figure 14. Per-trip route F1 on evaluator_test: geometric HMM versus deployed RF + HMM.",
   "width": 1.0,
   "px": [
@@ -1673,7 +1676,7 @@
  },
  {
   "t": "fig",
-  "path": "/Users/riyana/Desktop/ml-hackathon/reports/figures/fig_fp_breakdown_student_test.png",
+  "path": "C:\\Users\\Rohanth Ganesha C\\Documents\\ML Hackathon\\reports\\figures\\fig_fp_breakdown_student_test.png",
   "caption": "Figure 15. False-positive sources on student test (RF trained on 64 trips).",
   "width": 0.8,
   "px": [
@@ -1694,7 +1697,7 @@
  },
  {
   "t": "fig",
-  "path": "/Users/riyana/Desktop/ml-hackathon/reports/figures/runtime_distribution.png",
+  "path": "C:\\Users\\Rohanth Ganesha C\\Documents\\ML Hackathon\\reports\\figures\\runtime_distribution.png",
   "caption": "Figure 16. Server runtime per evaluator trip against trip length.",
   "width": 1.0,
   "px": [
@@ -1712,7 +1715,7 @@
  },
  {
   "t": "fig",
-  "path": "/Users/riyana/Desktop/ml-hackathon/reports/figures/folium_screenshot_student_test_00000077.png",
+  "path": "C:\\Users\\Rohanth Ganesha C\\Documents\\ML Hackathon\\reports\\figures\\folium_screenshot_student_test_00000077.png",
   "caption": "Figure 17. Folium map, student-test trip 00000077 (largest RF + HMM gain over the geometric HMM; arc F1 0.9693, identical to the recorded value). Headless-browser screenshot of reports/figures/maps/student_test_00000077_route_map.html.",
   "width": 1.0,
   "px": [
@@ -1722,7 +1725,7 @@
  },
  {
   "t": "fig",
-  "path": "/Users/riyana/Desktop/ml-hackathon/reports/figures/folium_screenshot_student_test_00000076.png",
+  "path": "C:\\Users\\Rohanth Ganesha C\\Documents\\ML Hackathon\\reports\\figures\\folium_screenshot_student_test_00000076.png",
   "caption": "Figure 18. Folium map, student-test trip 00000076 (lowest RF + HMM F1 on student test, 0.9512). Screenshot of reports/figures/maps/student_test_00000076_route_map.html.",
   "width": 1.0,
   "px": [
@@ -1980,7 +1983,7 @@
  },
  {
   "t": "fig",
-  "path": "/Users/riyana/Desktop/ml-hackathon/reports/figures/fig_route_map_student_test_00000077.png",
+  "path": "C:\\Users\\Rohanth Ganesha C\\Documents\\ML Hackathon\\reports\\figures\\fig_route_map_student_test_00000077.png",
   "caption": "Figure 19. Route map for student-test trip 00000077 (largest gain of RF + HMM over geometric HMM): road network, GPS, reference and predicted route. Static rendering of the same layers as the interactive Folium map reports/figures/maps/student_test_00000077_route_map.html.",
   "width": 0.62,
   "px": [
@@ -1990,7 +1993,7 @@
  },
  {
   "t": "fig",
-  "path": "/Users/riyana/Desktop/ml-hackathon/reports/figures/fig_route_map_student_test_00000076.png",
+  "path": "C:\\Users\\Rohanth Ganesha C\\Documents\\ML Hackathon\\reports\\figures\\fig_route_map_student_test_00000076.png",
   "caption": "Figure 20. Route map for student-test trip 00000076 (lowest RF + HMM F1 on student test). Interactive version: reports/figures/maps/student_test_00000076_route_map.html.",
   "width": 0.62,
   "px": [

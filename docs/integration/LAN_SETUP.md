@@ -1,5 +1,8 @@
 # PathSnap Two-Laptop LAN Deployment Guide
 
+**Team ID:** PT-056 (UE24CS352A — PES University, RR Campus)  
+**Members:** RIYANA KARTHIK VISHALAKSHI (PES1UG24AM226), ROHANTH GANESHA C (PES1UG24AM227), ROHIT CHAKI (PES1UG24AM228), ROHITH KARNING (PES1UG24AM229)  
+
 This guide details the physical deployment and network configuration for running the PathSnap distributed map-matching system across two physical machines over a shared local area network (LAN / Wi-Fi).
 
 ```
@@ -53,6 +56,13 @@ New-NetFirewallRule -DisplayName "PathSnap FastAPI Port 8000" -Direction Inbound
 *(To remove this rule after the hackathon, run: `Remove-NetFirewallRule -DisplayName "PathSnap FastAPI Port 8000"`)*
 
 ### Step 2.3: Start the FastAPI Backend
+
+#### Option A: 1-Click Launcher (Recommended)
+* **Windows:** Run `.\run_backend.bat`
+  *(Automatically detects IP addresses, checks virtualenv, and starts server)*
+* **macOS / Linux:** Run `chmod +x run_backend.sh && ./run_backend.sh`
+
+#### Option B: Manual Command
 In the project root directory on Laptop 1, run:
 ```bash
 uvicorn main:app --host 0.0.0.0 --port 8000
@@ -86,9 +96,15 @@ Expected response:
 ```
 
 ### Step 3.2: Launch the Streamlit Evaluator Dashboard
+
+#### Option A: 1-Click Launcher (Recommended)
+* **Windows:** Run `.\run_frontend.bat`
+* **macOS / Linux:** Run `chmod +x run_frontend.sh && ./run_frontend.sh`
+
+#### Option B: Manual Command
 In the project root directory on Laptop 2, run:
 ```bash
-streamlit run frontend/app.py --server.address 0.0.0.0
+streamlit run frontend/app.py
 ```
 Open a browser to `http://localhost:8501`.
 
@@ -99,10 +115,10 @@ Open a browser to `http://localhost:8501`.
    http://<LAPTOP_1_IP>:8000
    ```
    *(e.g., `http://192.168.1.45:8000`)*
-3. Click **🔍 Check Backend Status**.
-4. The status badge will change to: `✅ Backend online — {'status': 'ok', ...}`.
-5. Click **🔄 Refresh Trips** to load the trip list dynamically.
-6. Select any trip from the dropdown and click **🚀 Run Route Reconstruction**.
+3. Click **Check Backend Status**.
+4. The status badge will change to: `Backend online — {'status': 'ok', ...}`.
+5. Click **Refresh Trips** to load the trip list dynamically.
+6. Select any trip from the dropdown and click **Run Route Reconstruction**.
 
 ---
 
@@ -112,5 +128,5 @@ Open a browser to `http://localhost:8501`.
 |---|---|---|
 | `Connection refused` | FastAPI is not running or listening only on `127.0.0.1` | On Laptop 1, ensure the command includes `--host 0.0.0.0`. |
 | `Request timed out` | Windows Firewall or router AP client isolation | Run the PowerShell firewall command on Laptop 1. If using university Wi-Fi with client isolation, switch both laptops to a shared mobile hotspot. |
-| Dropdown shows raw dicts | Old unpatched frontend | Ensure `frontend/app.py` has the Person 4 contract patch applied (`_extract_id` helper). |
+| Dropdown shows raw dicts | Old unpatched frontend | Ensure `frontend/app.py` has the contract patch applied (`_extract_id` helper). |
 | 404 Not Found on `/predict` | Trip ID not found in dataset | Verify that `Student folder` on Laptop 1 contains the selected trip. |

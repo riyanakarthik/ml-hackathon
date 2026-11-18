@@ -26,7 +26,6 @@ from streamlit_folium import st_folium
 st.set_page_config(
     page_title="PathSnap — GPS Route Reconstruction",
     layout="wide",
-    page_icon="🗺️",
     initial_sidebar_state="collapsed",
 )
 
@@ -577,7 +576,7 @@ def render_app():
             st.markdown(
                 f"""
                 <div style="background: #231215; border: 1px solid #4a1f26; border-radius: 10px; padding: 10px 14px; margin-top: 12px; margin-bottom: 14px; color: #fca5a5; font-size: 12px;">
-                  ⚠️ {pred_err}
+                  [Warning] {pred_err}
                 </div>
                 """,
                 unsafe_allow_html=True,

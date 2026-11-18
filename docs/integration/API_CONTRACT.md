@@ -1,6 +1,8 @@
 # PathSnap API Contract Specification
 
 **Document Version:** 1.0.0  
+**Team ID:** PT-056 (UE24CS352A — PES University, RR Campus)  
+**Members:** RIYANA KARTHIK VISHALAKSHI (PES1UG24AM226), ROHANTH GANESHA C (PES1UG24AM227), ROHIT CHAKI (PES1UG24AM228), ROHITH KARNING (PES1UG24AM229)  
 **Backend:** FastAPI (`main.py`)  
 **Frontend:** Streamlit (`frontend/app.py`)  
 **Port:** `8000` (Backend), `8501` (Frontend)

@@ -141,9 +141,11 @@ B.append({"t": "cover",
           "subtitle": "Final Technical Report",
           "lines": ["UE24CS352A: Machine Learning — PathSnap Hackathon (PES University, Department of CSE, RR Campus)",
                     "Repository: github.com/riyanakarthik/ml-hackathon",
-                    f"Evidence snapshot: git {tests['git_head']} · frozen model commit {man['git_commit'][:7]}",
-                    "Team name / members / SRNs: not recorded in the project materials — to be added by the team "
-                    "before submission (repository contributors in git history: Riyana, Rohith Karning)."]})
+                    "**Team ID: PT-056**",
+                    "RIYANA KARTHIK VISHALAKSHI (PES1UG24AM226)",
+                    "ROHANTH GANESHA C (PES1UG24AM227)",
+                    "ROHIT CHAKI (PES1UG24AM228)",
+                    "ROHITH KARNING (PES1UG24AM229)"]})
 B.append({"t": "toc"})
 
 # ---------------------------------------------------------------- 1 executive summary
