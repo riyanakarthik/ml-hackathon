@@ -7,3 +7,5 @@ __pycache__/
 experiments/ml/dataset.joblib
 experiments/ml/oof_*.joblib
 experiments/ml/student_test_probs_*.joblib
+Student folder/Student folder/
+*.db-journal
