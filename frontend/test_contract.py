@@ -162,6 +162,48 @@ class TestFetchTrips(unittest.TestCase):
         self.assertEqual(result, ["00000038", "00000040"])
 
     @patch("app.requests.get")
+    def test_trips_wrapped_objects(self, mock_get: MagicMock) -> None:
+        resp = MagicMock()
+        resp.status_code = 200
+        resp.json.return_value = {
+            "count": 2,
+            "trips": [
+                {"trip_id": "00000038", "split": "train", "has_reference_route": True},
+                {"trip_id": "00000040", "split": "student_test", "has_reference_route": True},
+            ],
+        }
+        resp.raise_for_status = MagicMock()
+        mock_get.return_value = resp
+
+        result = frontend_app.fetch_trips(BASE_URL)
+        self.assertIsInstance(result, list)
+        self.assertEqual(result, ["00000038", "00000040"])
+
+    @patch("app.requests.get")
+    def test_trips_raw_objects_list(self, mock_get: MagicMock) -> None:
+        resp = MagicMock()
+        resp.status_code = 200
+        resp.json.return_value = [{"trip_id": "00000038"}, {"trip_id": "00000040"}]
+        resp.raise_for_status = MagicMock()
+        mock_get.return_value = resp
+
+        result = frontend_app.fetch_trips(BASE_URL)
+        self.assertIsInstance(result, list)
+        self.assertEqual(result, ["00000038", "00000040"])
+
+    @patch("app.requests.get")
+    def test_trips_numeric_list(self, mock_get: MagicMock) -> None:
+        resp = MagicMock()
+        resp.status_code = 200
+        resp.json.return_value = [38, 40]
+        resp.raise_for_status = MagicMock()
+        mock_get.return_value = resp
+
+        result = frontend_app.fetch_trips(BASE_URL)
+        self.assertIsInstance(result, list)
+        self.assertEqual(result, ["38", "40"])
+
+    @patch("app.requests.get")
     def test_trips_offline(self, mock_get: MagicMock) -> None:
         mock_get.side_effect = __import__("requests").exceptions.ConnectionError()
 
