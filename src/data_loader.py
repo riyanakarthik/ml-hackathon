@@ -64,12 +64,24 @@ class Trip:
 
 
 def list_trips(data_dir: str | os.PathLike | None = None) -> list[dict]:
-    """List trips found under every split directory of the data root."""
+    """List trips found under every split directory of the data root.
+
+    Also accepts a data root that IS a split directory (e.g. PATHSNAP_DATA_DIR
+    pointing straight at evaluator_test/): trip folders found directly under
+    the root are listed with split = the root's name. Mirrors the direct-folder
+    fallback that find_trip_dir already uses for /predict."""
     root = get_data_dir(data_dir)
     out = []
     if not root.is_dir():
         return out
     for split_dir in sorted(p for p in root.iterdir() if p.is_dir()):
+        if (split_dir / f"{split_dir.name}.track").exists():   # root is itself a split dir
+            out.append({
+                "trip_id": split_dir.name,
+                "split": root.name,
+                "has_reference_route": (split_dir / f"{split_dir.name}.route").exists(),
+            })
+            continue
         for trip_dir in sorted(p for p in split_dir.iterdir() if p.is_dir()):
             tid = trip_dir.name
             if (trip_dir / f"{tid}.track").exists():

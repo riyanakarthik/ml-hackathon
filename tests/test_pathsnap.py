@@ -291,3 +291,15 @@ def test_lcs_length():
     assert lcs_length([1, 2, 3, 4], [1, 3, 4]) == 3
     assert lcs_length([], [1]) == 0
     assert lcs_length([5, 1, 5], [5, 5]) == 2
+
+
+def test_list_trips_accepts_direct_split_dir(tmp_path):
+    """PATHSNAP_DATA_DIR may point at the parent of split dirs OR at a split dir."""
+    write_trip(tmp_path, "00000001", "evaluator_test", route=False)
+    write_trip(tmp_path, "00000002", "evaluator_test", route=True)
+    via_parent = list_trips(tmp_path)
+    direct = list_trips(tmp_path / "evaluator_test")
+    assert [t["trip_id"] for t in direct] == [t["trip_id"] for t in via_parent] == ["00000001", "00000002"]
+    assert all(t["split"] == "evaluator_test" for t in direct + via_parent)
+    assert [t["has_reference_route"] for t in direct] == [False, True]
+    assert load_trip("2", tmp_path / "evaluator_test").trip_id == "00000002"
