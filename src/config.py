@@ -33,6 +33,12 @@ class MatcherConfig:
     min_spacing_m: float = 0.0
     # route assembly
     fill_max_gap_m: float = 3000.0
+    # emissions source: "geometric" (Gaussian on distance; v1/v2 behaviour),
+    # "ml" (classifier log-prob) or "hybrid" (geometric + ml_weight * classifier log-prob).
+    emission: str = "geometric"
+    ml_model: str | None = None       # bundle name in models/ (without .joblib)
+    ml_weight: float = 1.0
+    prob_floor: float = 1e-4          # probability clipping before log
     max_loop_m: float = 0.0           # remove route cycles shorter than this (0 = off).
                                       #   Reference routes DO sometimes repeat arcs
                                       #   (9/80 train trips), so this is not free.

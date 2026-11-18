@@ -180,7 +180,7 @@ def test_api_synthetic(tmp_path, monkeypatch):
     for key in ("trip_id", "gps_coordinates", "predicted_coordinates", "predicted_arc_ids",
                 "metrics", "method", "runtime_ms"):
         assert key in body
-    assert body["method"] == "hmm_viterbi"
+    assert body["method"].startswith("hmm_viterbi")  # e.g. hmm_viterbi_ml_emission (default ml_v3)
     assert body["gps_coordinates"][0] == pytest.approx([50.00002, 10.0001], abs=1e-5)  # [lat, lon]
     assert body["predicted_arc_ids"] == [0, 1]
     assert body["metrics"]["arc_recall"] == 1.0

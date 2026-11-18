@@ -362,10 +362,14 @@ def greedy_continuity_decode(cands: Sequence[Candidates], net: RoadNetwork,
 
 def hmm_viterbi_decode(cands: Sequence[Candidates], net: RoadNetwork, track_xy: np.ndarray,
                        sigma: float | None = None, beta: float | None = None,
-                       config: MatcherConfig = BASELINE_V1) -> MatchResult:
+                       config: MatcherConfig = BASELINE_V1,
+                       emissions: Sequence[np.ndarray] | None = None,
+                       method_name: str = "hmm_viterbi") -> MatchResult:
     """Newson & Krumm-style HMM decoded with ``viterbi_log``.
 
-    ``sigma``/``beta`` arguments override the config (kept for compatibility)."""
+    ``sigma``/``beta`` arguments override the config (kept for compatibility).
+    ``emissions`` (per-point log-scores aligned with ``cands``) replaces the
+    geometric Gaussian emissions, e.g. classifier-based ones."""
     cfg = config
     if beta is None:
         beta = cfg.beta
@@ -373,7 +377,7 @@ def hmm_viterbi_decode(cands: Sequence[Candidates], net: RoadNetwork, track_xy: 
         sigma = cfg.sigma_m if cfg.sigma_m is not None else estimate_sigma(cands)
     sigma = sigma * cfg.sigma_scale
     nd = NetworkDistance(net, cfg.dijkstra_limit_m)
-    em = emission_log_probs(cands, sigma)
+    em = emission_log_probs(cands, sigma) if emissions is None else list(emissions)
     keep = thin_observations(track_xy, cands, cfg.min_spacing_m)
     em_dec = [e if keep[t] else np.empty(0) for t, e in enumerate(em)]
     trans = make_hmm_transition_fn(net, cands, track_xy, nd, beta, cfg.backtrack_tol_m,
@@ -383,7 +387,7 @@ def hmm_viterbi_decode(cands: Sequence[Candidates], net: RoadNetwork, track_xy: 
     arcs, xy = _positions(cands, choice)
     route, unfilled, fill = assemble_route(arcs, net, nd, cfg.fill_max_gap_m, return_fill_mask=True)
     route, fill = remove_short_loops(route, fill, net.arc_len, cfg.max_loop_m)
-    return MatchResult("hmm_viterbi", arcs, xy, route, fill,
+    return MatchResult(method_name, arcs, xy, route, fill,
                        {"config": cfg.name, "sigma_m": round(sigma, 3), "beta": beta,
                         "hmm_breaks": len(breaks) - 1, "unfilled_gaps": unfilled,
                         "decoded_points": int(keep.sum())})

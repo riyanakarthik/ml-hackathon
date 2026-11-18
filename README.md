@@ -26,11 +26,12 @@ The HMM is driven by `MatcherConfig` ([src/config.py](src/config.py)), saved as 
 
 | config | status |
 |---|---|
+| `ml_v3` | **API default**: HMM with Random-Forest emissions (trained on all 80 train trips) |
 | `baseline_v1` | original hand-set decoder (k=8, radius 50 m, β=15 m); kept for **rollback** |
-| `tuned_v2` | **API default**: Optuna-selected, validated on held-out train trips |
+| `tuned_v2` | Optuna-tuned geometric-emission HMM; the ML **fallback** and rollback option |
 | `tuned_candidate` | raw output of the last tuning run (not validated by itself) |
 
-To roll back, set `DEFAULT_CONFIG = "baseline_v1"` in `main.py`, or send `"config": "baseline_v1"` with a request.
+To roll back, set `DEFAULT_CONFIG` in `main.py` to `"tuned_v2"` or `"baseline_v1"`, or send `"config": ...` with a request. If the ML model can't be loaded, prediction falls back to geometric emissions and reports `details.emission_fallback`.
 
 ### Tuning and experiment commands
 ```bash
@@ -109,3 +110,65 @@ cd frontend
 pip install -r requirements.txt
 streamlit run app.py          # connects to http://localhost:8000 by default
 ```
+
+## Supervised candidate classifier (ML + HMM)
+
+### Pipeline
+1. **Pseudo-labels** ([src/labels.py](src/labels.py), training/evaluation only). `.route` is not one label per GPS point, so each point is aligned *monotonically* to a position in the ordered reference route. The alignment scores distance, adds a heading-agreement term when the vehicle is moving, and penalises skipping over long arcs. Repeated arcs and A→reverse(A) U-turns are separate route positions. A label is *invalid* if it lies more than 30 m from its arc; invalid labels are excluded from training and from pseudo-label accuracy.
+   - **Checks** (`python -m scripts.validate_alignment`, 80 train trips): always monotone; 93.4% of moving points agree with the arc direction; 96.7% of labels valid on average; ≥96% agreement under σ=5/20 m.
+   - **Plots and Folium maps** are in `experiments/ml/alignment_plots/`.
+   - **Finding:** in some trips the `.route` ends early while the GPS keeps going (trip 54: 91% of points after the route end; trip 33: 71%). Those points get invalid labels, and route-level precision on these trips penalises arcs that may be matched correctly.
+2. **Features** ([src/features.py](src/features.py), inference-safe; never reads `.route`, enforced by tests). There are 20 per-candidate features: distance, rank and gap to the best candidate, noise-normalised distance, heading vs arc bearing (cos and degrees, plus a validity flag), speed, time gaps, arc length, projection position and distances to the arc ends, reverse-twin presence, node degrees, and ±5-point window support and mean distance.
+3. **Models** ([src/ml_train.py](src/ml_train.py)): Logistic Regression, Decision Tree, Random Forest, Extra Trees and HistGradientBoosting. They are trained on valid-label rows with `GroupKFold(5)` by trip over the 64 tune trips, and fold disjointness is asserted.
+4. **Emissions** ([src/ml_emission.py](src/ml_emission.py)): `clip(p, 1e-4, 1)`, normalised per point, then `log`, multiplied by `ml_weight`. Per-point normalisation doesn't change the Viterbi path; it keeps scores interpretable. The transition model is unchanged from `tuned_v2`.
+
+```bash
+python -m scripts.train_classifiers --stage dataset
+python -m scripts.train_classifiers --stage cv
+python -m scripts.train_classifiers --stage oof_hmm
+python -m scripts.train_classifiers --stage emission_grid --model random_forest
+python -m scripts.train_classifiers --stage fit_tune
+python -m scripts.compare --a tuned_v2 --b ml_candidate --trips holdout
+python -m scripts.train_classifiers --stage final --model random_forest --emission ml --weight 4
+python -m scripts.compare --a tuned_v2 --b ml_v3 --trips student_test
+python -m scripts.train_classifiers --stage student_test
+```
+
+Models are saved in `models/*.joblib`. Each bundle holds the model (with its scaler, for logistic regression), the feature names, the schema version, the candidate configuration, the label configuration, the training trip ids, the CV metrics and the library versions. Results are in `experiments/ml/*.csv`.
+
+### Results (real runs; seed 42)
+**Two kinds of accuracy.** *Pseudo-label* metrics compare against derived per-point labels. *Route-level* metrics (arc F1) compare against `.route` itself.
+
+Candidate classification, grouped 5-fold CV on the 64 tune trips (OOF, valid-label rows):
+
+| model | precision | recall | F1 | macro F1 | log loss | pseudo top-1 | fit (5 folds) | predict / 1k rows |
+|---|---|---|---|---|---|---|---|---|
+| logreg | 0.807 | 0.771 | 0.789 | 0.878 | 0.147 | 0.824 | 2.6 s | 0.03 ms |
+| decision_tree | 0.847 | 0.792 | 0.818 | 0.895 | 0.130 | 0.830 | 32 s | 0.03 ms |
+| random_forest | 0.862 | 0.794 | 0.827 | 0.900 | 0.111 | 0.833 | 147 s | 1.4 ms |
+| extra_trees | 0.864 | 0.775 | 0.817 | 0.894 | 0.121 | 0.827 | 47 s | 1.5 ms |
+| hist_gb | 0.852 | 0.806 | 0.828 | 0.901 | 0.111 | 0.835 | 30 s | 1.5 ms |
+
+For reference, the nearest-candidate rule scores a pseudo top-1 of 0.538.
+
+OOF classifier + HMM, route-level, 64 tune trips (`ml` emission, w=1):
+
+| emission | F1 mean | median | P | R |
+|---|---|---|---|---|
+| geometric | 0.9398 | 0.9745 | 0.904 | 0.987 |
+| logreg | 0.9428 | 0.9768 | 0.910 | 0.988 |
+| decision_tree | 0.9451 | 0.9782 | 0.913 | 0.988 |
+| random_forest | 0.9458 | 0.9776 | 0.915 | 0.989 |
+| extra_trees | 0.9439 | 0.9755 | 0.912 | 0.988 |
+| hist_gb | 0.9449 | 0.9776 | 0.913 | 0.988 |
+
+Random Forest was selected on this OOF route F1. The emission grid on OOF gave the best result with `ml`, w=4 (F1 0.9492); w=8 gave 0.9421, and the best hybrid gave 0.9467.
+
+| set | geometric HMM (`tuned_v2`) | RF + HMM | per trip |
+|---|---|---|---|
+| held-out train (16), model trained on the 64 tune trips | F1 0.9477 (median 0.9740) | **0.9511** (0.9793) | 10 better, 3 worse, 3 same; Wilcoxon p = 0.041 |
+| student_test (10, run once after freezing), model trained on 80 | F1 0.9683 (median 0.9787) | **0.9755** (0.9787) | 6 better, 0 worse, 4 same |
+
+Runtime is about +90–110 ms per trip, for feature extraction and RF inference. Gains come mostly from fewer wrong-direction arcs: 49 → 22 false positives on student test. Gap-fill false positives are unchanged.
+
+Every saved model on student test (reporting only, after freezing; `experiments/ml/student_test_model_report.csv`), shown as route F1 with the HMM: geometric 0.9683, logreg 0.9671, decision_tree 0.9737, random_forest 0.9730, extra_trees 0.9738, hist_gb 0.9742, and random_forest trained on 80 trips 0.9755.

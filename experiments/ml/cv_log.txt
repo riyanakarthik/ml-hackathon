@@ -1,0 +1,31 @@
+  logreg         fold 0: F1=0.8277 logloss=0.1232 top1(pseudo)=0.8733  fit 0.6s
+  logreg         fold 1: F1=0.8123 logloss=0.1272 top1(pseudo)=0.8572  fit 0.6s
+  logreg         fold 2: F1=0.8203 logloss=0.1387 top1(pseudo)=0.8477  fit 0.5s
+  logreg         fold 3: F1=0.7176 logloss=0.1623 top1(pseudo)=0.7578  fit 0.5s
+  logreg         fold 4: F1=0.7650 logloss=0.1821 top1(pseudo)=0.7886  fit 0.5s
+  decision_tree  fold 0: F1=0.8640 logloss=0.0951 top1(pseudo)=0.8773  fit 6.4s
+  decision_tree  fold 1: F1=0.8541 logloss=0.1049 top1(pseudo)=0.8673  fit 6.3s
+  decision_tree  fold 2: F1=0.8419 logloss=0.1123 top1(pseudo)=0.8528  fit 6.0s
+  decision_tree  fold 3: F1=0.7494 logloss=0.1474 top1(pseudo)=0.7678  fit 6.2s
+  decision_tree  fold 4: F1=0.7850 logloss=0.1932 top1(pseudo)=0.7897  fit 6.9s
+  random_forest  fold 0: F1=0.8762 logloss=0.0847 top1(pseudo)=0.8820  fit 30.7s
+  random_forest  fold 1: F1=0.8607 logloss=0.0869 top1(pseudo)=0.8708  fit 29.8s
+  random_forest  fold 2: F1=0.8451 logloss=0.1026 top1(pseudo)=0.8541  fit 27.5s
+  random_forest  fold 3: F1=0.7600 logloss=0.1254 top1(pseudo)=0.7721  fit 28.7s
+  random_forest  fold 4: F1=0.7971 logloss=0.1540 top1(pseudo)=0.7944  fit 30.3s
+  extra_trees    fold 0: F1=0.8661 logloss=0.0966 top1(pseudo)=0.8731  fit 9.8s
+  extra_trees    fold 1: F1=0.8492 logloss=0.0997 top1(pseudo)=0.8612  fit 9.3s
+  extra_trees    fold 2: F1=0.8389 logloss=0.1140 top1(pseudo)=0.8485  fit 8.9s
+  extra_trees    fold 3: F1=0.7463 logloss=0.1345 top1(pseudo)=0.7650  fit 9.0s
+  extra_trees    fold 4: F1=0.7864 logloss=0.1617 top1(pseudo)=0.7901  fit 9.5s
+  hist_gb        fold 0: F1=0.8758 logloss=0.0825 top1(pseudo)=0.8841  fit 6.0s
+  hist_gb        fold 1: F1=0.8643 logloss=0.0865 top1(pseudo)=0.8746  fit 5.9s
+  hist_gb        fold 2: F1=0.8464 logloss=0.1021 top1(pseudo)=0.8564  fit 5.9s
+  hist_gb        fold 3: F1=0.7706 logloss=0.1242 top1(pseudo)=0.7791  fit 6.2s
+  hist_gb        fold 4: F1=0.7910 logloss=0.1619 top1(pseudo)=0.7895  fit 6.4s
+        model  oof_precision  oof_recall  oof_f1  oof_macro_f1  oof_log_loss  oof_roc_auc  oof_pseudo_top1_accuracy  oof_pseudo_top1_given_label_in_candidates  oof_n_rows  oof_positive_rate  fold_f1_mean  fold_f1_std  fold_logloss_mean  fit_s_total  predict_ms_per_1k_rows
+       logreg         0.8068      0.7710  0.7885        0.8776        0.1468       0.9708                    0.8239                                     0.8258     1125557             0.1395        0.7886       0.0466             0.1467          2.6                   0.029
+decision_tree         0.8466      0.7917  0.8182        0.8949        0.1304       0.9780                    0.8298                                     0.8317     1125557             0.1395        0.8189       0.0495             0.1306         31.8                   0.028
+random_forest         0.8621      0.7944  0.8269        0.9000        0.1108       0.9834                    0.8334                                     0.8353     1125557             0.1395        0.8278       0.0481             0.1107        147.1                   1.429
+  extra_trees         0.8638      0.7746  0.8168        0.8944        0.1214       0.9812                    0.8265                                     0.8283     1125557             0.1395        0.8174       0.0497             0.1213         46.5                   1.478
+      hist_gb         0.8521      0.8056  0.8282        0.9006        0.1114       0.9835                    0.8352                                     0.8372     1125557             0.1395        0.8296       0.0463             0.1114         30.4                   1.496

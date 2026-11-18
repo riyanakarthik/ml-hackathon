@@ -26,9 +26,27 @@ app = FastAPI(title="PathSnap", version="0.1.0")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
 
-# Default decoder configuration. "baseline_v1" is the original hand-set HMM
-# and stays available for rollback via {"config": "baseline_v1"}.
-DEFAULT_CONFIG = "tuned_v2"  # validated on held-out train trips; rollback: "baseline_v1"
+# Default decoder configuration: "ml_v3" = HMM with Random-Forest emissions,
+# validated on held-out train trips. Rollback / alternatives (also selectable
+# per request via {"config": ...}): "tuned_v2" (geometric emissions),
+# "baseline_v1" (original hand-set HMM). If the ML model cannot be loaded the
+# pipeline falls back to geometric emissions and reports it in details.
+DEFAULT_CONFIG = "ml_v3"
+
+
+@app.on_event("startup")
+def _warm_model() -> None:
+    """Load the default classifier once so the first request is not slow."""
+    try:
+        cfg = get_config(DEFAULT_CONFIG)
+        if cfg.emission != "geometric" and cfg.ml_model:
+            from src.ml_emission import load_model_bundle
+            b = load_model_bundle(cfg.ml_model)
+            log.info("Loaded classifier %s (%s, trained on %d trips)", cfg.ml_model,
+                     b.get("model_name"), len(b.get("trained_on_trips", [])))
+    except Exception as e:  # noqa: BLE001
+        log.warning("Could not preload model for %s: %s (geometric fallback will be used)",
+                    DEFAULT_CONFIG, e)
 
 
 class PredictRequest(BaseModel):

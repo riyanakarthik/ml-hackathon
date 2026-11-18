@@ -15,6 +15,7 @@ from .config import MatcherConfig
 from .data_loader import list_trips, load_trip
 from .evaluation import (align_points_to_route, load_reference_route, observation_metrics,
                          route_diagnostics, route_metrics)
+from .labels import align_track_to_route
 from .pipeline import build_network, predict_trip
 
 EXPERIMENT_DIR = Path(__file__).resolve().parent.parent / "experiments"
@@ -50,14 +51,39 @@ def _trip_assets(trip_id: str):
         net, track_xy = build_network(trip)
         ref = load_reference_route(trip_id)  # evaluation only
         labels, _ = align_points_to_route(track_xy, ref, net.nodes_xy, trip.arcs)
-        _CACHE[trip_id] = (trip, net, track_xy, ref, labels)
+        al2 = align_track_to_route(track_xy, trip.timestamps, ref, net)
+        _CACHE[trip_id] = (trip, net, track_xy, ref, labels, al2)
     return _CACHE[trip_id]
 
 
-def evaluate_trip(trip_id: str, config: MatcherConfig, method: str = "hmm") -> dict:
-    trip, net, track_xy, ref, labels = _trip_assets(trip_id)
+_PROBS: dict = {}
+
+
+def _load_probs(probs_file: str, trip_id: str, cands) -> list[np.ndarray]:
+    """Per-point OOF probabilities for a trip from a joblib {trip_id: (N,) array}."""
+    if probs_file not in _PROBS:
+        import joblib
+        _PROBS.clear()
+        _PROBS[probs_file] = joblib.load(probs_file)
+    p = _PROBS[probs_file][trip_id]
+    counts = [len(c) for c in cands]
+    if len(p) != sum(counts):
+        raise ValueError(f"{trip_id}: OOF probs ({len(p)}) do not match candidates ({sum(counts)})")
+    return np.split(p, np.cumsum(counts)[:-1])
+
+
+def evaluate_trip(trip_id: str, config: MatcherConfig, method: str = "hmm",
+                  probs_file: str | None = None) -> dict:
+    trip, net, track_xy, ref, labels, al2 = _trip_assets(trip_id)
+    ml_probs = None
+    if probs_file is not None:
+        from .matcher import generate_candidates
+        c0 = generate_candidates(net, track_xy, k=config.k, radius_m=config.radius_m,
+                                 fallback_radius_m=config.fallback_radius_m)
+        ml_probs = _load_probs(probs_file, trip_id, c0)
     t0 = time.perf_counter()
-    res, _, _ = predict_trip(trip, method, config=config, network=(net, track_xy))
+    res, _, _ = predict_trip(trip, method, config=config, network=(net, track_xy),
+                             ml_probs=ml_probs)
     runtime_ms = (time.perf_counter() - t0) * 1000  # excludes cached network build
     cands = res.info["_candidates"]
     row = {"trip_id": trip_id, "runtime_ms": round(runtime_ms, 1)}
@@ -67,12 +93,18 @@ def evaluate_trip(trip_id: str, config: MatcherConfig, method: str = "hmm") -> d
     row.update(route_diagnostics(res.route_arc_ids, res.route_is_fill, res.point_arc_ids,
                                  ref, trip.arcs, net.arc_len, cands))
     row["hmm_breaks"] = res.info.get("hmm_breaks")
+    row["emission"] = res.info.get("emission")
+    # pseudo-label v2 (src.labels, heading-aware), valid-label points only
+    v = al2.valid
+    row["pl2_valid_points"] = int(v.sum())
+    row["pl2_top1_accuracy"] = round(float(np.mean(res.point_arc_ids[v] == al2.labels[v])), 4) \
+        if v.any() else None
     return row
 
 
 def _worker(args):
-    trip_id, cfg_dict, method = args
-    return evaluate_trip(trip_id, MatcherConfig.from_dict(cfg_dict), method)
+    trip_id, cfg_dict, method, probs_file = args
+    return evaluate_trip(trip_id, MatcherConfig.from_dict(cfg_dict), method, probs_file)
 
 
 _POOL: ProcessPoolExecutor | None = None
@@ -86,8 +118,8 @@ def get_pool(n_jobs: int = 8) -> ProcessPoolExecutor:
 
 
 def evaluate_config(config: MatcherConfig, trip_ids, method: str = "hmm",
-                    n_jobs: int = 8) -> list[dict]:
-    args = [(t, config.to_dict(), method) for t in trip_ids]
+                    n_jobs: int = 8, probs_file: str | None = None) -> list[dict]:
+    args = [(t, config.to_dict(), method, probs_file) for t in trip_ids]
     if n_jobs <= 1:
         return [_worker(a) for a in args]
     # chunks keep each trip on a stable-ish worker; cache is per process
@@ -98,7 +130,7 @@ def summarize(rows: list[dict], keys=("arc_f1", "arc_precision", "arc_recall",
                                       "length_precision", "length_recall",
                                       "route_continuity", "obs_top1_accuracy",
                                       "obs_macro_f1", "candidate_miss_rate",
-                                      "runtime_ms")) -> dict:
+                                      "pl2_top1_accuracy", "runtime_ms")) -> dict:
     out = {"n_trips": len(rows)}
     for k in keys:
         v = np.array([r[k] for r in rows if r.get(k) is not None], dtype=float)

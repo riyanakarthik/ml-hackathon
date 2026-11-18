@@ -2,3 +2,8 @@
 __pycache__/
 .pytest_cache/
 .DS_Store
+
+# large, regenerable ML artifacts (python -m scripts.train_classifiers --stage dataset / cv)
+experiments/ml/dataset.joblib
+experiments/ml/oof_*.joblib
+experiments/ml/student_test_probs_*.joblib
