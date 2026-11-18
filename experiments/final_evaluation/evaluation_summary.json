@@ -1,0 +1,459 @@
+{
+ "split": "evaluator_test",
+ "n_trips": 10,
+ "deployed_config": "ml_v3",
+ "reference_routes_available": true,
+ "metric_definition": "arc_* = set-based over DISTINCT DIRECTED arc ids (duplicates collapsed, order ignored, gap-fill arcs included); seq_* = order/duplicate-aware LCS; pseudo_top1 vs derived per-point labels",
+ "model_check": {
+  "model_name": "random_forest",
+  "n_train_trips": 80,
+  "feature_order_matches_training": true,
+  "schema_version": true,
+  "classes": [
+   0,
+   1
+  ],
+  "eval_trip_in_training_set": [],
+  "calibration": "none (raw RandomForest predict_proba, clipped at prob_floor, per-point normalised; identical to training-time CV usage)"
+ },
+ "trips_listed_by_api": 10,
+ "leakage_check_predictions_identical_without_route": "10/10",
+ "variants": {
+  "rf80_hmm_deployed": {
+   "failures": 0,
+   "all_deterministic": true,
+   "all_arc_ids_valid": true,
+   "arc_f1": {
+    "mean": 0.962,
+    "median": 0.9802,
+    "min": 0.8617,
+    "max": 0.9989,
+    "std": 0.0448,
+    "n": 10
+   },
+   "arc_precision": {
+    "mean": 0.9371,
+    "median": 0.9619,
+    "min": 0.7657,
+    "max": 1.0,
+    "std": 0.0747,
+    "n": 10
+   },
+   "arc_recall": {
+    "mean": 0.9908,
+    "median": 0.9967,
+    "min": 0.9661,
+    "max": 1.0,
+    "std": 0.0112,
+    "n": 10
+   },
+   "seq_f1": {
+    "mean": 0.9511,
+    "median": 0.9683,
+    "min": 0.8048,
+    "max": 0.9989,
+    "std": 0.0609,
+    "n": 10
+   },
+   "length_precision": {
+    "mean": 0.9749,
+    "median": 0.9811,
+    "min": 0.9013,
+    "max": 1.0,
+    "std": 0.0297,
+    "n": 10
+   },
+   "length_recall": {
+    "mean": 0.9958,
+    "median": 0.9963,
+    "min": 0.9895,
+    "max": 1.0,
+    "std": 0.0037,
+    "n": 10
+   },
+   "path_continuity": {
+    "mean": 1.0,
+    "median": 1.0,
+    "min": 1.0,
+    "max": 1.0,
+    "std": 0.0,
+    "n": 10
+   },
+   "pseudo_top1_accuracy": {
+    "mean": 0.8991,
+    "median": 0.9182,
+    "min": 0.8006,
+    "max": 0.9754,
+    "std": 0.0589,
+    "n": 10
+   },
+   "runtime_ms_server": {
+    "mean": 333.5,
+    "median": 328.45,
+    "min": 79.5,
+    "max": 754.8,
+    "std": 195.7531,
+    "n": 10
+   },
+   "latency_ms_wall": {
+    "mean": 344.46,
+    "median": 339.1,
+    "min": 83.2,
+    "max": 765.8,
+    "std": 198.9487,
+    "n": 10
+   },
+   "api_metrics_match_independent": true
+  },
+  "geometric_hmm_tuned_v2": {
+   "failures": 0,
+   "all_deterministic": true,
+   "all_arc_ids_valid": true,
+   "arc_f1": {
+    "mean": 0.9502,
+    "median": 0.9772,
+    "min": 0.8028,
+    "max": 1.0,
+    "std": 0.0648,
+    "n": 10
+   },
+   "arc_precision": {
+    "mean": 0.9151,
+    "median": 0.9563,
+    "min": 0.6867,
+    "max": 1.0,
+    "std": 0.1059,
+    "n": 10
+   },
+   "arc_recall": {
+    "mean": 0.9941,
+    "median": 1.0,
+    "min": 0.9661,
+    "max": 1.0,
+    "std": 0.0118,
+    "n": 10
+   },
+   "seq_f1": {
+    "mean": 0.9134,
+    "median": 0.9568,
+    "min": 0.6994,
+    "max": 1.0,
+    "std": 0.1067,
+    "n": 10
+   },
+   "length_precision": {
+    "mean": 0.978,
+    "median": 0.988,
+    "min": 0.9228,
+    "max": 1.0,
+    "std": 0.0252,
+    "n": 10
+   },
+   "length_recall": {
+    "mean": 0.9974,
+    "median": 1.0,
+    "min": 0.9881,
+    "max": 1.0,
+    "std": 0.0046,
+    "n": 10
+   },
+   "path_continuity": {
+    "mean": 1.0,
+    "median": 1.0,
+    "min": 1.0,
+    "max": 1.0,
+    "std": 0.0,
+    "n": 10
+   },
+   "pseudo_top1_accuracy": {
+    "mean": 0.8901,
+    "median": 0.912,
+    "min": 0.7853,
+    "max": 0.9758,
+    "std": 0.0674,
+    "n": 10
+   },
+   "runtime_ms_server": {
+    "mean": 280.33,
+    "median": 242.65,
+    "min": 60.7,
+    "max": 686.7,
+    "std": 183.6913,
+    "n": 10
+   },
+   "latency_ms_wall": {
+    "mean": 293.52,
+    "median": 274.95,
+    "min": 66.0,
+    "max": 698.1,
+    "std": 185.3692,
+    "n": 10
+   },
+   "api_metrics_match_independent": true
+  },
+  "rf64_hmm_ml_candidate": {
+   "failures": 0,
+   "all_deterministic": true,
+   "all_arc_ids_valid": true,
+   "arc_f1": {
+    "mean": 0.9618,
+    "median": 0.9802,
+    "min": 0.8617,
+    "max": 0.9989,
+    "std": 0.0448,
+    "n": 10
+   },
+   "arc_precision": {
+    "mean": 0.9368,
+    "median": 0.9619,
+    "min": 0.7657,
+    "max": 1.0,
+    "std": 0.0748,
+    "n": 10
+   },
+   "arc_recall": {
+    "mean": 0.9908,
+    "median": 0.9967,
+    "min": 0.9661,
+    "max": 1.0,
+    "std": 0.0112,
+    "n": 10
+   },
+   "seq_f1": {
+    "mean": 0.9474,
+    "median": 0.9683,
+    "min": 0.7906,
+    "max": 0.9989,
+    "std": 0.0647,
+    "n": 10
+   },
+   "length_precision": {
+    "mean": 0.9745,
+    "median": 0.9811,
+    "min": 0.8996,
+    "max": 1.0,
+    "std": 0.0302,
+    "n": 10
+   },
+   "length_recall": {
+    "mean": 0.9958,
+    "median": 0.9963,
+    "min": 0.9895,
+    "max": 1.0,
+    "std": 0.0037,
+    "n": 10
+   },
+   "path_continuity": {
+    "mean": 1.0,
+    "median": 1.0,
+    "min": 1.0,
+    "max": 1.0,
+    "std": 0.0,
+    "n": 10
+   },
+   "pseudo_top1_accuracy": {
+    "mean": 0.8978,
+    "median": 0.918,
+    "min": 0.7991,
+    "max": 0.9754,
+    "std": 0.0603,
+    "n": 10
+   },
+   "runtime_ms_server": {
+    "mean": 359.25,
+    "median": 329.25,
+    "min": 79.4,
+    "max": 749.9,
+    "std": 219.222,
+    "n": 10
+   },
+   "latency_ms_wall": {
+    "mean": 370.03,
+    "median": 339.75,
+    "min": 83.0,
+    "max": 761.4,
+    "std": 224.1812,
+    "n": 10
+   },
+   "api_metrics_match_independent": true
+  },
+  "classifier_only_rf80": {
+   "failures": 0,
+   "all_deterministic": null,
+   "all_arc_ids_valid": true,
+   "arc_f1": {
+    "mean": 0.7504,
+    "median": 0.7524,
+    "min": 0.562,
+    "max": 0.9368,
+    "std": 0.1135,
+    "n": 10
+   },
+   "arc_precision": {
+    "mean": 0.6135,
+    "median": 0.6058,
+    "min": 0.3908,
+    "max": 0.881,
+    "std": 0.1468,
+    "n": 10
+   },
+   "arc_recall": {
+    "mean": 0.9966,
+    "median": 1.0,
+    "min": 0.9822,
+    "max": 1.0,
+    "std": 0.0061,
+    "n": 10
+   },
+   "seq_f1": {
+    "mean": 0.5049,
+    "median": 0.5392,
+    "min": 0.0681,
+    "max": 0.8322,
+    "std": 0.2036,
+    "n": 10
+   },
+   "length_precision": {
+    "mean": 0.7265,
+    "median": 0.7285,
+    "min": 0.4041,
+    "max": 0.929,
+    "std": 0.1457,
+    "n": 10
+   },
+   "length_recall": {
+    "mean": 0.997,
+    "median": 1.0,
+    "min": 0.9867,
+    "max": 1.0,
+    "std": 0.0051,
+    "n": 10
+   },
+   "path_continuity": {
+    "mean": 0.9957,
+    "median": 1.0,
+    "min": 0.9803,
+    "max": 1.0,
+    "std": 0.0081,
+    "n": 10
+   },
+   "pseudo_top1_accuracy": {
+    "mean": 0.8535,
+    "median": 0.892,
+    "min": 0.5907,
+    "max": 0.972,
+    "std": 0.1163,
+    "n": 10
+   },
+   "runtime_ms_server": {
+    "mean": 66.01,
+    "median": 51.15,
+    "min": 18.9,
+    "max": 145.9,
+    "std": 37.4309,
+    "n": 10
+   },
+   "latency_ms_wall": {
+    "mean": 66.01,
+    "median": 51.15,
+    "min": 18.9,
+    "max": 145.9,
+    "std": 37.4309,
+    "n": 10
+   }
+  },
+  "nearest_road": {
+   "failures": 0,
+   "all_deterministic": null,
+   "all_arc_ids_valid": true,
+   "arc_f1": {
+    "mean": 0.6227,
+    "median": 0.6179,
+    "min": 0.5152,
+    "max": 0.7402,
+    "std": 0.0813,
+    "n": 10
+   },
+   "arc_precision": {
+    "mean": 0.4579,
+    "median": 0.4477,
+    "min": 0.3486,
+    "max": 0.5875,
+    "std": 0.0863,
+    "n": 10
+   },
+   "arc_recall": {
+    "mean": 0.9933,
+    "median": 0.9979,
+    "min": 0.9703,
+    "max": 1.0,
+    "std": 0.0096,
+    "n": 10
+   },
+   "seq_f1": {
+    "mean": 0.3092,
+    "median": 0.3258,
+    "min": 0.0958,
+    "max": 0.4727,
+    "std": 0.1293,
+    "n": 10
+   },
+   "length_precision": {
+    "mean": 0.5092,
+    "median": 0.51,
+    "min": 0.4071,
+    "max": 0.6166,
+    "std": 0.0653,
+    "n": 10
+   },
+   "length_recall": {
+    "mean": 0.9957,
+    "median": 0.9997,
+    "min": 0.9779,
+    "max": 1.0,
+    "std": 0.0076,
+    "n": 10
+   },
+   "path_continuity": {
+    "mean": 0.9956,
+    "median": 1.0,
+    "min": 0.9763,
+    "max": 1.0,
+    "std": 0.0084,
+    "n": 10
+   },
+   "pseudo_top1_accuracy": {
+    "mean": 0.5222,
+    "median": 0.4804,
+    "min": 0.3982,
+    "max": 0.7409,
+    "std": 0.121,
+    "n": 10
+   },
+   "runtime_ms_server": {
+    "mean": 45.02,
+    "median": 31.05,
+    "min": 4.2,
+    "max": 174.0,
+    "std": 49.774,
+    "n": 10
+   },
+   "latency_ms_wall": {
+    "mean": 45.02,
+    "median": 31.05,
+    "min": 4.2,
+    "max": 174.0,
+    "std": 49.774,
+    "n": 10
+   }
+  }
+ },
+ "deployed_vs_geometric_per_trip": {
+  "better": 6,
+  "worse": 3,
+  "same": 1,
+  "mean_delta": 0.0117,
+  "wilcoxon_p": 0.4258
+ },
+ "evaluation_finished": "2026-11-18T16:08:51"
+}

@@ -1,0 +1,3 @@
+trip_id,why,arc_f1_regenerated,arc_f1_recorded,match
+00000077,largest gain of RF + HMM over geometric HMM,0.9693,0.9693,True
+00000076,lowest RF + HMM F1 on student test,0.9512,0.9512,True

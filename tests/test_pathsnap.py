@@ -263,3 +263,43 @@ def test_api_config_default_and_rollback(tmp_path, monkeypatch):
     r = c.post("/predict", json={"trip_id": "1", "config": "baseline_v1"}).json()
     assert r["details"]["config"] == "baseline_v1"
     assert c.post("/predict", json={"trip_id": "1", "config": "../etc"}).status_code == 400
+
+
+# ---------------------------------------------------------------- metric definition
+
+def test_route_metric_definition_duplicates_direction_order():
+    from src.evaluation import route_metrics, sequence_metrics
+    arcs = np.array([[0, 1], [1, 2], [2, 1], [1, 0], [2, 3]])  # arc 2 = reverse of 1, 3 = reverse of 0
+    ref = [0, 1, 4]
+    # duplicates are NOT penalised by the set metric ...
+    m = route_metrics([0, 1, 1, 4], ref, arcs)
+    assert (m["arc_precision"], m["arc_recall"]) == (1.0, 1.0)
+    # ... but are by the order-aware one
+    assert sequence_metrics([0, 1, 2, 1, 4], ref)["seq_precision"] == round(3 / 5, 4)
+    # direction matters: reverse twin counts as a false positive
+    m = route_metrics([0, 2, 4], ref, arcs)
+    assert m["arc_precision"] == round(2 / 3, 4) and m["arc_recall"] == round(2 / 3, 4)
+    # order: the set metric ignores it, the sequence metric does not
+    assert route_metrics([4, 1, 0], ref, arcs)["arc_f1"] == 1.0
+    assert sequence_metrics([4, 1, 0], ref)["seq_f1"] == round(1 / 3, 4)
+    # every arc in the predicted route counts, including gap-fill insertions
+    assert route_metrics([0, 1, 3, 4], ref, arcs)["n_pred_arcs"] == 4
+
+
+def test_lcs_length():
+    from src.evaluation import lcs_length
+    assert lcs_length([1, 2, 3, 4], [1, 3, 4]) == 3
+    assert lcs_length([], [1]) == 0
+    assert lcs_length([5, 1, 5], [5, 5]) == 2
+
+
+def test_list_trips_accepts_direct_split_dir(tmp_path):
+    """PATHSNAP_DATA_DIR may point at the parent of split dirs OR at a split dir."""
+    write_trip(tmp_path, "00000001", "evaluator_test", route=False)
+    write_trip(tmp_path, "00000002", "evaluator_test", route=True)
+    via_parent = list_trips(tmp_path)
+    direct = list_trips(tmp_path / "evaluator_test")
+    assert [t["trip_id"] for t in direct] == [t["trip_id"] for t in via_parent] == ["00000001", "00000002"]
+    assert all(t["split"] == "evaluator_test" for t in direct + via_parent)
+    assert [t["has_reference_route"] for t in direct] == [False, True]
+    assert load_trip("2", tmp_path / "evaluator_test").trip_id == "00000002"

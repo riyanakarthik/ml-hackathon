@@ -1,0 +1,6 @@
+model,train_macro_f1,train_log_loss,cv_macro_f1,cv_log_loss,train_source,cv_source
+logreg,0.8793,0.1449,0.8776,0.1468,models/logreg__tune64.joblib scored on its own 64 training trips,experiments/ml/oof_logreg.joblib
+decision_tree,0.9089,0.1007,0.8949,0.1304,models/decision_tree__tune64.joblib scored on its own 64 training trips,experiments/ml/oof_decision_tree.joblib
+random_forest,0.9203,0.0872,0.9,0.1108,models/random_forest__tune64.joblib scored on its own 64 training trips,experiments/ml/oof_random_forest.joblib
+extra_trees,0.9005,0.1132,0.8944,0.1214,models/extra_trees__tune64.joblib scored on its own 64 training trips,experiments/ml/oof_extra_trees.joblib
+hist_gb,0.9211,0.0889,0.9006,0.1114,models/hist_gb__tune64.joblib scored on its own 64 training trips,experiments/ml/oof_hist_gb.joblib

@@ -1,0 +1,16 @@
+{
+ "trips": 80,
+ "gps_points": 208417,
+ "gps_points_valid_label": 182349,
+ "candidate_rows": 1589846,
+ "candidate_rows_valid": 1327875,
+ "positives_valid": 181979,
+ "positive_rate_valid": 0.137,
+ "label_in_candidates_frac": 0.998,
+ "candidate_config": {
+  "k": 12,
+  "radius_m": 52.72439791668979,
+  "fallback_radius_m": 200.0
+ },
+ "n_features": 20
+}

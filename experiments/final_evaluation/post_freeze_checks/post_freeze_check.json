@@ -1,0 +1,22 @@
+{
+ "checked_at": "2026-11-18T16:23:36",
+ "git_head_at_check": "4cb4c3821e57acb0ce20c51ea4574eee29732b8a",
+ "note": "post-freeze SOFTWARE SETUP change only (trip discovery in src/data_loader.py::list_trips); prediction model, configs and inference code unchanged",
+ "src/data_loader.py_sha256_now": "735d39d91b16ed9fdbbe5ac5caf183edcbdfbea638591e1220f72d9abfe0c8c2",
+ "src/data_loader.py_sha256_frozen": "95a49ac17086e130acfbb7a06fe31bd0d33aebad829a421ed29e8c50d79cf5b7",
+ "all_routes_identical": true,
+ "all_f1_identical": true,
+ "all_listed_by_trips_in_both_modes": true,
+ "n_checks": 20,
+ "response_keys": [
+  "details",
+  "gps_coordinates",
+  "method",
+  "metrics",
+  "point_arc_ids",
+  "predicted_arc_ids",
+  "predicted_coordinates",
+  "runtime_ms",
+  "trip_id"
+ ]
+}

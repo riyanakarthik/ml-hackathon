@@ -1,0 +1,12 @@
+{
+ "summary_line": "65 passed in 2.51s",
+ "passed": 65,
+ "failed": 0,
+ "per_file": {
+  "frontend/test_contract.py": 20,
+  "tests/test_ml.py": 11,
+  "tests/test_pathsnap.py": 26,
+  "tests/test_robustness.py": 8
+ },
+ "git_head": "627c448"
+}

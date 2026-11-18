@@ -1,0 +1,4 @@
+split,baseline_v1,tuned_v2,source
+Tune 64 (selection set),0.8466,0.9398,experiments/optuna_trials.csv (trial 0 vs best)
+Holdout 16,0.91810625,0.94773125,experiments/compare_baseline_v1_vs_tuned_candidate_holdout.csv
+Student test 10,0.91551,0.9683499999999998,experiments/compare_baseline_v1_vs_tuned_v2_student_test.csv

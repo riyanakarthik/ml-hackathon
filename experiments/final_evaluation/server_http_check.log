@@ -1,0 +1,41 @@
+INFO:     Started server process [56707]
+INFO:     Waiting for application startup.
+2026-11-18 16:10:44,207 INFO pathsnap: Loaded classifier random_forest__train80 (random_forest, trained on 80 trips)
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:59639 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59643 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59645 - "GET /trips HTTP/1.1" 200 OK
+2026-11-18 16:10:57,083 INFO src.data_loader: Loaded trip 00000015 (evaluator_test): 6854 GPS points, 1571 nodes, 3225 arcs
+2026-11-18 16:10:57,482 INFO pathsnap: predict trip=00000015 split=evaluator_test method=hmm_viterbi_ml_emission config=ml_v3 points=6854 route_arcs=197 runtime_ms=399.9 metrics={'arc_precision': 0.7657, 'arc_recall': 0.9853, 'arc_f1': 0.8617}
+INFO:     127.0.0.1:59647 - "POST /predict HTTP/1.1" 200 OK
+2026-11-18 16:10:57,523 INFO src.data_loader: Loaded trip 00000017 (evaluator_test): 1346 GPS points, 36724 nodes, 76425 arcs
+2026-11-18 16:10:58,263 INFO pathsnap: predict trip=00000017 split=evaluator_test method=hmm_viterbi_ml_emission config=ml_v3 points=1346 route_arcs=851 runtime_ms=746.6 metrics={'arc_precision': 0.9272, 'arc_recall': 0.9958, 'arc_f1': 0.9603}
+INFO:     127.0.0.1:59649 - "POST /predict HTTP/1.1" 200 OK
+2026-11-18 16:10:58,275 INFO src.data_loader: Loaded trip 00000023 (evaluator_test): 458 GPS points, 5053 nodes, 10596 arcs
+2026-11-18 16:10:58,354 INFO pathsnap: predict trip=00000023 split=evaluator_test method=hmm_viterbi_ml_emission config=ml_v3 points=458 route_arcs=68 runtime_ms=79.4 metrics={'arc_precision': 0.8636, 'arc_recall': 0.9661, 'arc_f1': 0.912}
+INFO:     127.0.0.1:59651 - "POST /predict HTTP/1.1" 200 OK
+2026-11-18 16:10:58,361 INFO src.data_loader: Loaded trip 00000030 (evaluator_test): 654 GPS points, 13223 nodes, 24218 arcs
+2026-11-18 16:10:58,621 INFO pathsnap: predict trip=00000030 split=evaluator_test method=hmm_viterbi_ml_emission config=ml_v3 points=654 route_arcs=374 runtime_ms=261.7 metrics={'arc_precision': 0.9116, 'arc_recall': 0.9792, 'arc_f1': 0.9442}
+INFO:     127.0.0.1:59653 - "POST /predict HTTP/1.1" 200 OK
+2026-11-18 16:10:58,633 INFO src.data_loader: Loaded trip 00000049 (evaluator_test): 2642 GPS points, 23165 nodes, 47542 arcs
+2026-11-18 16:10:58,931 INFO pathsnap: predict trip=00000049 split=evaluator_test method=hmm_viterbi_ml_emission config=ml_v3 points=2642 route_arcs=409 runtime_ms=302.5 metrics={'arc_precision': 1.0, 'arc_recall': 0.9976, 'arc_f1': 0.9988}
+INFO:     127.0.0.1:59655 - "POST /predict HTTP/1.1" 200 OK
+2026-11-18 16:10:58,949 INFO src.data_loader: Loaded trip 00000059 (evaluator_test): 1031 GPS points, 12631 nodes, 24024 arcs
+2026-11-18 16:10:59,306 INFO pathsnap: predict trip=00000059 split=evaluator_test method=hmm_viterbi_ml_emission config=ml_v3 points=1031 route_arcs=486 runtime_ms=358.9 metrics={'arc_precision': 0.9559, 'arc_recall': 1.0, 'arc_f1': 0.9774}
+INFO:     127.0.0.1:59657 - "POST /predict HTTP/1.1" 200 OK
+2026-11-18 16:10:59,315 INFO src.data_loader: Loaded trip 00000067 (evaluator_test): 916 GPS points, 2265 nodes, 4485 arcs
+2026-11-18 16:10:59,406 INFO pathsnap: predict trip=00000067 split=evaluator_test method=hmm_viterbi_ml_emission config=ml_v3 points=916 route_arcs=82 runtime_ms=92.1 metrics={'arc_precision': 0.9878, 'arc_recall': 0.9878, 'arc_f1': 0.9878}
+INFO:     127.0.0.1:59659 - "POST /predict HTTP/1.1" 200 OK
+2026-11-18 16:10:59,415 INFO src.data_loader: Loaded trip 00000073 (evaluator_test): 1144 GPS points, 12151 nodes, 25631 arcs
+2026-11-18 16:10:59,657 INFO pathsnap: predict trip=00000073 split=evaluator_test method=hmm_viterbi_ml_emission config=ml_v3 points=1144 route_arcs=240 runtime_ms=244.3 metrics={'arc_precision': 0.9916, 'arc_recall': 1.0, 'arc_f1': 0.9958}
+INFO:     127.0.0.1:59661 - "POST /predict HTTP/1.1" 200 OK
+2026-11-18 16:10:59,675 INFO src.data_loader: Loaded trip 00000087 (evaluator_test): 1399 GPS points, 55234 nodes, 107451 arcs
+2026-11-18 16:11:00,111 INFO pathsnap: predict trip=00000087 split=evaluator_test method=hmm_viterbi_ml_emission config=ml_v3 points=1399 route_arcs=454 runtime_ms=444.9 metrics={'arc_precision': 1.0, 'arc_recall': 0.9978, 'arc_f1': 0.9989}
+INFO:     127.0.0.1:59663 - "POST /predict HTTP/1.1" 200 OK
+2026-11-18 16:11:00,124 INFO src.data_loader: Loaded trip 00000094 (evaluator_test): 3230 GPS points, 6815 nodes, 14931 arcs
+2026-11-18 16:11:00,564 INFO pathsnap: predict trip=00000094 split=evaluator_test method=hmm_viterbi_ml_emission config=ml_v3 points=3230 route_arcs=640 runtime_ms=441.1 metrics={'arc_precision': 0.9679, 'arc_recall': 0.9983, 'arc_f1': 0.9829}
+INFO:     127.0.0.1:59665 - "POST /predict HTTP/1.1" 200 OK
+2026-11-18 16:11:07,659 INFO src.data_loader: Loaded trip 00000015 (evaluator_test): 6854 GPS points, 1571 nodes, 3225 arcs
+2026-11-18 16:11:08,033 INFO pathsnap: predict trip=00000015 split=evaluator_test method=hmm_viterbi_ml_emission config=ml_v3 points=6854 route_arcs=197 runtime_ms=375.1 metrics={'arc_precision': 0.7657, 'arc_recall': 0.9853, 'arc_f1': 0.8617}
+INFO:     127.0.0.1:59668 - "POST /predict HTTP/1.1" 200 OK

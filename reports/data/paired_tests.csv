@@ -1,0 +1,7 @@
+comparison,n_trips,mean_delta,better,worse,same,sign_test_p,wilcoxon_p,source
+holdout16: geometric HMM -> RF(64)+HMM,16,0.0033,10,3,3,0.0923,0.041,experiments/compare_tuned_v2_vs_ml_candidate_holdout.csv
+student_test10: geometric HMM -> RF(80)+HMM,10,0.0071,6,0,4,0.0312,0.0312,experiments/compare_tuned_v2_vs_ml_v3_student_test.csv
+tune64 OOF (w=1): geometric HMM -> RF+HMM,64,0.006,39,8,17,0.0,0.0,experiments/ml/oof_hmm_per_trip_f1.csv
+evaluator_test10: geometric HMM -> RF(80)+HMM,10,0.0117,6,3,1,0.5078,0.4258,experiments/final_evaluation/evaluation_per_trip.csv
+holdout16: baseline_v1 -> tuned_v2 decoder,16,0.0296,13,1,2,0.0018,0.0002,experiments/compare_baseline_v1_vs_tuned_candidate_holdout.csv
+student_test10: baseline_v1 -> tuned_v2 decoder,10,0.0528,9,0,1,0.0039,0.0039,experiments/compare_baseline_v1_vs_tuned_v2_student_test.csv

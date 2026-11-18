@@ -190,3 +190,46 @@ def route_diagnostics(pred_route, is_fill, point_arc_ids, ref_route, arcs: np.nd
         out["fn_never_candidate"] = len(fn - cand_arcs)
         out["fn_candidate_not_chosen"] = len(fn & cand_arcs)
     return out
+
+
+# ----------------------------------------------------------------------------
+# Order-aware supplementary metric
+# ----------------------------------------------------------------------------
+
+def lcs_length(a, b) -> int:
+    """Longest common subsequence length (O(len(a) * len(b)), small routes)."""
+    a = [int(x) for x in a]
+    b = [int(x) for x in b]
+    if not a or not b:
+        return 0
+    prev = np.zeros(len(b) + 1, dtype=np.int32)
+    bb = np.asarray(b)
+    for x in a:
+        match = np.r_[0, (bb == x)].astype(np.int32)
+        cur = np.zeros_like(prev)
+        # cur[j] = max(prev[j], cur[j-1], prev[j-1] + match[j])
+        diag = prev[:-1] + match[1:]
+        for j in range(1, len(prev)):
+            cur[j] = max(prev[j], cur[j - 1], diag[j - 1])
+        prev = cur
+    return int(prev[-1])
+
+
+def sequence_metrics(pred_route, ref_route) -> dict:
+    """ORDER- and DUPLICATE-aware route agreement (supplementary to the
+    set-based arc metrics): LCS between the predicted arc sequence (as
+    returned, consecutive duplicates already collapsed by route assembly) and
+    the reference sequence.
+
+      seq_precision = LCS / len(pred)   seq_recall = LCS / len(ref)
+
+    Unlike arc_f1, an arc predicted twice when driven once costs precision, and
+    arcs predicted in the wrong order are not matched. Direction is respected
+    because arc ids are directed."""
+    pred = [int(a) for a in pred_route]
+    ref = [int(a) for a in ref_route]
+    lcs = lcs_length(pred, ref)
+    p = lcs / len(pred) if pred else 0.0
+    r = lcs / len(ref) if ref else 0.0
+    return {"seq_precision": round(p, 4), "seq_recall": round(r, 4),
+            "seq_f1": round(2 * p * r / (p + r), 4) if p + r else 0.0}
