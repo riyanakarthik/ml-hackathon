@@ -1,0 +1,16 @@
+{
+  "name": "tuned_v2",
+  "k": 12,
+  "radius_m": 52.72439791668979,
+  "fallback_radius_m": 200.0,
+  "sigma_m": null,
+  "sigma_scale": 0.8662467912517785,
+  "beta": 2.335001654519724,
+  "backtrack_tol_m": 24.693182489954108,
+  "backtrack_penalty": 0.0,
+  "uturn_penalty": 13.74033717036362,
+  "dijkstra_limit_m": 2000.0,
+  "min_spacing_m": 11.642490335126803,
+  "fill_max_gap_m": 3000.0,
+  "max_loop_m": 0.0
+}
