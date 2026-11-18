@@ -1,0 +1,17 @@
+{
+ "git_commit": "8459a045f9c3949852db2c75ecd0e87dcf7521a3",
+ "note": "Frozen RF+HMM (ml_v3) state before final-evaluation work",
+ "files": {
+  "configs/baseline_v1.json": "e3c9ff2ef8576fc3e486a043c3441e7c0f762c086f6e659dacf172cb1c88498a",
+  "configs/ml_candidate.json": "a0a275c76e46a888068a6c399b29501d58609aa6fef9c889d1e4fe0d51fd9c6d",
+  "configs/ml_v3.json": "e13ce9400026fe680de95a4bb52a0e515fbf9fc9a652928a0928fcd041c85211",
+  "configs/tuned_candidate.json": "5b37e4e8c27f58c4865884df0e1519e06c266904c4c76f320eb67c1734d0c83e",
+  "configs/tuned_v2.json": "03c982b32fe6850bb253aeeae42b6211d96fae5d549c4c005f582730cc1bad98",
+  "models/decision_tree__tune64.joblib": "2dd9f384bca058f7022aa59365493c0cc10cfefd8b24be3370694497af912e0d",
+  "models/extra_trees__tune64.joblib": "7a992a33ffe0c8dcfcadc4af52e67c51171524861999ae14d1c11bc7ea2f5a2e",
+  "models/hist_gb__tune64.joblib": "bc6591738a4bfabb5a11c6c3d9988e81d1c7d373de0a6bc7baebe3663d2d43c5",
+  "models/logreg__tune64.joblib": "2e24894c2f8043afab781e66cd7e8cdd5041a90d604124bf961b4eca43be67e5",
+  "models/random_forest__train80.joblib": "e0267fb4ed25839219264d02aa709e447e9db99a4f469822ac97779a93a14c61",
+  "models/random_forest__tune64.joblib": "a2936b476501330068cc26f9d8985e3a0a174a26c4b3b22270908d999661f500"
+ }
+}

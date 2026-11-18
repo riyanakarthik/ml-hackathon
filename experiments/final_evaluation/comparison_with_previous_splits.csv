@@ -1,0 +1,13 @@
+split,n_trips,model,classifier_training_trips,decoder_params,arc_f1_mean,arc_f1_median,arc_f1_min,arc_f1_std,arc_precision_mean,arc_recall_mean,source_file
+train: tune64 (OOF; also used to select w and decoder params -> optimistic),64,geometric HMM,none,tuned_v2 (Optuna on 64 tune trips),0.9398,0.9745,,,0.9043,0.9874,experiments/ml/oof_hmm_comparison.csv
+train: tune64 (OOF; also used to select w and decoder params -> optimistic),64,RF + HMM (w=4),5-fold OOF inside 64 (~51 per fold),tuned_v2 (Optuna on 64 tune trips),0.9492,0.9819,,,0.9199,0.9886,experiments/ml/emission_grid_random_forest.csv
+train: holdout16 (never used for selection),16,geometric HMM,none,tuned_v2 (Optuna on 64 tune trips),0.9477,0.974,0.6774,0.088,0.9184,0.9902,experiments/compare_tuned_v2_vs_ml_candidate_holdout.csv
+train: holdout16 (never used for selection),16,RF + HMM,64 tune,tuned_v2 (Optuna on 64 tune trips),0.9511,0.9794,0.6842,0.0872,0.925,0.9895,experiments/compare_tuned_v2_vs_ml_candidate_holdout.csv
+student_test10,10,geometric HMM,none,tuned_v2 (Optuna on 64 tune trips),0.9683,0.9786,0.936,0.0248,0.9455,0.9936,experiments/compare_tuned_v2_vs_ml_v3_student_test.csv
+student_test10,10,RF + HMM,64 tune,tuned_v2 (Optuna on 64 tune trips),0.973,0.9768,,,0.9572,0.9901,experiments/ml/student_test_model_report.csv
+student_test10,10,RF + HMM (DEPLOYED ml_v3),80 train,tuned_v2 (Optuna on 64 tune trips),0.9755,0.9786,0.9512,0.0179,0.9587,0.9936,experiments/compare_tuned_v2_vs_ml_v3_student_test.csv
+"evaluator_test10 (final, frozen model)",10,"nearest road (no classifier, no HMM)",none,tuned_v2 (Optuna on 64 tune trips),0.6227,0.6179,0.5152,0.0813,0.4579,0.9933,experiments/final_evaluation/evaluation_per_trip.csv
+"evaluator_test10 (final, frozen model)",10,RF only (no HMM),80 train,tuned_v2 (Optuna on 64 tune trips),0.7504,0.7524,0.562,0.1135,0.6135,0.9966,experiments/final_evaluation/evaluation_per_trip.csv
+"evaluator_test10 (final, frozen model)",10,geometric HMM,none,tuned_v2 (Optuna on 64 tune trips),0.9502,0.9772,0.8028,0.0648,0.9151,0.9941,experiments/final_evaluation/evaluation_per_trip.csv
+"evaluator_test10 (final, frozen model)",10,RF + HMM,64 tune,tuned_v2 (Optuna on 64 tune trips),0.9618,0.9802,0.8617,0.0448,0.9368,0.9908,experiments/final_evaluation/evaluation_per_trip.csv
+"evaluator_test10 (final, frozen model)",10,RF + HMM (DEPLOYED ml_v3),80 train,tuned_v2 (Optuna on 64 tune trips),0.962,0.9802,0.8617,0.0448,0.9371,0.9908,experiments/final_evaluation/evaluation_per_trip.csv

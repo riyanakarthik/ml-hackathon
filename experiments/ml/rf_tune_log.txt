@@ -1,0 +1,13 @@
+[I 2026-11-18 15:42:09,154] A new study created in RDB with name: rf_classifier
+trial  0 logloss 0.11071  {'n_estimators': 150, 'max_depth': 18, 'min_samples_leaf': 20, 'max_features': 'sqrt', 'max_samples': 1.0}  156s
+trial  1 logloss 0.11264  {'n_estimators': 150, 'max_depth': 29, 'min_samples_leaf': 40, 'max_features': 'sqrt', 'max_samples': 0.24646688973455957}  50s
+trial  2 logloss 0.11053  {'n_estimators': 275, 'max_depth': 21, 'min_samples_leaf': 35, 'max_features': 0.33, 'max_samples': 0.36987128854262097}  178s
+trial  3 logloss 0.11520  {'n_estimators': 100, 'max_depth': 10, 'min_samples_leaf': 3, 'max_features': 'sqrt', 'max_samples': 0.6894823157779036}  63s
+trial  4 logloss 0.11042  {'n_estimators': 75, 'max_depth': 13, 'min_samples_leaf': 4, 'max_features': 0.33, 'max_samples': 0.6113875507308894}  71s
+trial  8 logloss 0.11084  {'n_estimators': 150, 'max_depth': 24, 'min_samples_leaf': 85, 'max_features': 0.33, 'max_samples': 0.797343176883702}  183s
+trial 10 logloss 0.11033  {'n_estimators': 125, 'max_depth': 16, 'min_samples_leaf': 5, 'max_features': 0.33, 'max_samples': 0.36298168799511066}  92s
+trial 11 logloss 0.11099  {'n_estimators': 75, 'max_depth': 16, 'min_samples_leaf': 5, 'max_features': 0.33, 'max_samples': 0.22500297086722293}  35s
+trial 12 logloss 0.11055  {'n_estimators': 75, 'max_depth': 14, 'min_samples_leaf': 37, 'max_features': 0.33, 'max_samples': 0.5267075420424285}  69s
+trial 14 logloss 0.11086  {'n_estimators': 125, 'max_depth': 20, 'min_samples_leaf': 7, 'max_features': 0.33, 'max_samples': 0.5424697078365814}  120s
+/Users/riyana/miniconda3/lib/python3.14/multiprocessing/resource_tracker.py:475: UserWarning: resource_tracker: There appear to be 2 leaked semaphore objects to clean up at shutdown: {'/loky-55448-495xyiwz', '/loky-55448-qtflldtd'}
+  warnings.warn(

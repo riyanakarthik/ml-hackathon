@@ -3,9 +3,20 @@ __pycache__/
 .pytest_cache/
 .DS_Store
 
-# large, regenerable ML artifacts (python -m scripts.train_classifiers --stage dataset / cv)
+# Large, regenerable ML artifacts
 experiments/ml/dataset.joblib
 experiments/ml/oof_*.joblib
 experiments/ml/student_test_probs_*.joblib
+experiments/ml/oof_rf_*.joblib
+experiments/ml/probs_rf_*.joblib
+
+# Local files
 Student folder/Student folder/
 *.db-journal
+
+# Evaluator data including ground-truth .route
+# Keep server-side, never publish
+evaluator_test/
+
+# Evaluator-trip maps containing ground-truth geometry
+experiments/final_evaluation/maps/
