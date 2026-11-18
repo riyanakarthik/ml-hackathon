@@ -1,0 +1,295 @@
+figure,series,label,value,source
+fig_decoder_optuna_history.png,trial objective,0,0.8466,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,1,0.8343,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,2,0.9167,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,3,0.8325,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,4,0.886,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,5,0.7881,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,6,0.7991,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,7,0.7667,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,8,0.7759,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,9,0.8639,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,10,0.781,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,11,0.7741,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,12,0.8959,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,13,0.7779,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,14,0.8078,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,15,0.9244,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,16,0.847,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,17,0.8351,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,18,0.849,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,19,0.867,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,20,0.9117,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,21,0.9205,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,22,0.8985,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,23,0.9032,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,24,0.9115,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,25,0.9224,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,26,0.911,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,27,0.9207,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,28,0.9082,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,29,0.913,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,30,0.9224,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,31,0.9328,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,32,0.925,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,33,0.919,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,34,0.9191,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,35,0.9178,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,36,0.927,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,37,0.9275,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,38,0.9201,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,39,0.9218,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,40,0.9173,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,41,0.9367,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,42,0.9332,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,43,0.929,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,44,0.9371,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,45,0.9278,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,46,0.9248,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,47,0.9327,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,48,0.9265,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,49,0.9262,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,50,0.9324,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,51,0.9374,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,52,0.9326,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,53,0.9217,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,54,0.9274,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,55,0.9258,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,56,0.924,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,57,0.9286,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,58,0.9278,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,59,0.9273,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,60,0.938,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,61,0.9351,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,62,0.9366,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,63,0.9335,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,64,0.9294,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,65,0.9383,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,66,0.9358,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,67,0.9291,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,68,0.9371,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,69,0.9386,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,70,0.9369,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,71,0.9371,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,72,0.9319,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,73,0.9385,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,74,0.9368,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,75,0.928,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,76,0.9307,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,77,0.9277,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,78,0.938,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,79,0.9389,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,80,0.9379,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,81,0.9375,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,82,0.9345,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,83,0.9376,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,84,0.9336,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,85,0.9338,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,86,0.9382,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,87,0.9386,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,88,0.9384,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,89,0.9374,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,90,0.9293,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,91,0.9378,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,92,0.9351,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,93,0.9296,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,94,0.9381,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,95,0.9392,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,96,0.9347,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,97,0.9387,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,98,0.9362,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,99,0.9378,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,100,0.9346,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,101,0.9389,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,102,0.9269,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,103,0.9386,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,104,0.923,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,105,0.9346,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,106,0.9374,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,107,0.9383,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,108,0.9339,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,109,0.9362,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,110,0.9389,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,111,0.9379,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,112,0.9382,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,113,0.9392,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,114,0.9332,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,115,0.9387,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,116,0.9338,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,117,0.9368,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,118,0.9372,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,119,0.936,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,120,0.938,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,121,0.939,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,122,0.9375,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,123,0.9367,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,124,0.9369,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,125,0.9346,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,126,0.9346,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,127,0.9383,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,128,0.9386,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,129,0.9368,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,130,0.9374,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,131,0.9388,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,132,0.9369,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,133,0.9398,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,134,0.937,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,135,0.9376,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,136,0.9382,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,137,0.9378,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,138,0.9381,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,139,0.9382,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,140,0.9375,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,141,0.9386,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,142,0.9395,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,143,0.9349,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,144,0.9386,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,145,0.9381,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,146,0.9388,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,147,0.939,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,148,0.9389,experiments/optuna_trials.csv
+fig_decoder_optuna_history.png,trial objective,149,0.9375,experiments/optuna_trials.csv
+fig_rf_optuna_history.png,trial objective,0,0.11071015803650833,experiments/ml/rf_optuna_trials_partial.csv
+fig_rf_optuna_history.png,trial objective,1,0.11264348890582698,experiments/ml/rf_optuna_trials_partial.csv
+fig_rf_optuna_history.png,trial objective,2,0.11053431208828293,experiments/ml/rf_optuna_trials_partial.csv
+fig_rf_optuna_history.png,trial objective,3,0.11519891947701985,experiments/ml/rf_optuna_trials_partial.csv
+fig_rf_optuna_history.png,trial objective,4,0.11041863921057748,experiments/ml/rf_optuna_trials_partial.csv
+fig_rf_optuna_history.png,trial objective,8,0.11083619369638646,experiments/ml/rf_optuna_trials_partial.csv
+fig_rf_optuna_history.png,trial objective,10,0.11032684813735863,experiments/ml/rf_optuna_trials_partial.csv
+fig_rf_optuna_history.png,trial objective,11,0.11099055239350535,experiments/ml/rf_optuna_trials_partial.csv
+fig_rf_optuna_history.png,trial objective,12,0.11055454212743146,experiments/ml/rf_optuna_trials_partial.csv
+fig_rf_optuna_history.png,trial objective,14,0.1108598539194376,experiments/ml/rf_optuna_trials_partial.csv
+fig_cv_model_comparison.png,cv macro F1 mean,logreg,0.87754,experiments/ml/cv_fold_metrics.csv
+fig_cv_model_comparison.png,cv macro F1 mean,decision_tree,0.89524,experiments/ml/cv_fold_metrics.csv
+fig_cv_model_comparison.png,cv macro F1 mean,extra_trees,0.8947200000000001,experiments/ml/cv_fold_metrics.csv
+fig_cv_model_comparison.png,cv macro F1 mean,random_forest,0.90048,experiments/ml/cv_fold_metrics.csv
+fig_cv_model_comparison.png,cv macro F1 mean,hist_gb,0.9013199999999999,experiments/ml/cv_fold_metrics.csv
+fig_cv_model_comparison.png,cv macro F1 sd,logreg,0.02648240925595709,experiments/ml/cv_fold_metrics.csv
+fig_cv_model_comparison.png,cv macro F1 sd,decision_tree,0.028339954128403268,experiments/ml/cv_fold_metrics.csv
+fig_cv_model_comparison.png,cv macro F1 sd,extra_trees,0.028225467223767977,experiments/ml/cv_fold_metrics.csv
+fig_cv_model_comparison.png,cv macro F1 sd,random_forest,0.027554437029269876,experiments/ml/cv_fold_metrics.csv
+fig_cv_model_comparison.png,cv macro F1 sd,hist_gb,0.027058030231337973,experiments/ml/cv_fold_metrics.csv
+fig_cv_model_comparison.png,cv log loss mean,logreg,0.1467,experiments/ml/cv_fold_metrics.csv
+fig_cv_model_comparison.png,cv log loss mean,decision_tree,0.13058,experiments/ml/cv_fold_metrics.csv
+fig_cv_model_comparison.png,cv log loss mean,extra_trees,0.1213,experiments/ml/cv_fold_metrics.csv
+fig_cv_model_comparison.png,cv log loss mean,random_forest,0.11072,experiments/ml/cv_fold_metrics.csv
+fig_cv_model_comparison.png,cv log loss mean,hist_gb,0.11143999999999998,experiments/ml/cv_fold_metrics.csv
+fig_cv_model_comparison.png,cv log loss sd,logreg,0.024965075605733703,experiments/ml/cv_fold_metrics.csv
+fig_cv_model_comparison.png,cv log loss sd,decision_tree,0.040176572775686085,experiments/ml/cv_fold_metrics.csv
+fig_cv_model_comparison.png,cv log loss sd,extra_trees,0.02709400302650017,experiments/ml/cv_fold_metrics.csv
+fig_cv_model_comparison.png,cv log loss sd,random_forest,0.029150591760717312,experiments/ml/cv_fold_metrics.csv
+fig_cv_model_comparison.png,cv log loss sd,hist_gb,0.032618215769719835,experiments/ml/cv_fold_metrics.csv
+fig_student_test_top1_macro_f1.png,top1,logreg__tune64,0.8339,experiments/ml/student_test_model_report.csv
+fig_student_test_top1_macro_f1.png,top1,decision_tree__tune64,0.8469,experiments/ml/student_test_model_report.csv
+fig_student_test_top1_macro_f1.png,top1,random_forest__tune64,0.8506,experiments/ml/student_test_model_report.csv
+fig_student_test_top1_macro_f1.png,top1,extra_trees__tune64,0.8402,experiments/ml/student_test_model_report.csv
+fig_student_test_top1_macro_f1.png,top1,hist_gb__tune64,0.8535,experiments/ml/student_test_model_report.csv
+fig_student_test_top1_macro_f1.png,macro_f1,logreg__tune64,0.89,experiments/ml/student_test_model_report.csv
+fig_student_test_top1_macro_f1.png,macro_f1,decision_tree__tune64,0.9056,experiments/ml/student_test_model_report.csv
+fig_student_test_top1_macro_f1.png,macro_f1,random_forest__tune64,0.9091,experiments/ml/student_test_model_report.csv
+fig_student_test_top1_macro_f1.png,macro_f1,extra_trees__tune64,0.9022,experiments/ml/student_test_model_report.csv
+fig_student_test_top1_macro_f1.png,macro_f1,hist_gb__tune64,0.9103,experiments/ml/student_test_model_report.csv
+fig_ablation_route_f1.png,tune64_OOF,nearest_road|-,0.5428,experiments/final/ablation_summary.csv
+fig_ablation_route_f1.png,tune64_OOF,classifier_only|random_forest,0.6989,experiments/final/ablation_summary.csv
+fig_ablation_route_f1.png,tune64_OOF,geometric_hmm|-,0.9398,experiments/final/ablation_summary.csv
+fig_ablation_route_f1.png,tune64_OOF,ml_hmm|random_forest,0.9492,experiments/final/ablation_summary.csv
+fig_ablation_route_f1.png,holdout16,nearest_road|-,0.5762,experiments/final/ablation_summary.csv
+fig_ablation_route_f1.png,holdout16,classifier_only|random_forest,0.7631,experiments/final/ablation_summary.csv
+fig_ablation_route_f1.png,holdout16,geometric_hmm|-,0.9477,experiments/final/ablation_summary.csv
+fig_ablation_route_f1.png,holdout16,ml_hmm|random_forest,0.9511,experiments/final/ablation_summary.csv
+fig_ablation_route_f1.png,student_test10,nearest_road|-,0.5615,experiments/final/ablation_summary.csv
+fig_ablation_route_f1.png,student_test10,classifier_only|random_forest,0.7079,experiments/final/ablation_summary.csv
+fig_ablation_route_f1.png,student_test10,geometric_hmm|-,0.9684,experiments/final/ablation_summary.csv
+fig_ablation_route_f1.png,student_test10,ml_hmm|random_forest,0.973,experiments/final/ablation_summary.csv
+fig_classifier_only_vs_hmm.png,holdout16,classifier_only|logreg,0.7494,experiments/final/ablation_summary.csv
+fig_classifier_only_vs_hmm.png,holdout16,classifier_only|decision_tree,0.7602,experiments/final/ablation_summary.csv
+fig_classifier_only_vs_hmm.png,holdout16,classifier_only|random_forest,0.7631,experiments/final/ablation_summary.csv
+fig_classifier_only_vs_hmm.png,holdout16,classifier_only|extra_trees,0.7602,experiments/final/ablation_summary.csv
+fig_classifier_only_vs_hmm.png,holdout16,classifier_only|hist_gb,0.7795,experiments/final/ablation_summary.csv
+fig_classifier_only_vs_hmm.png,holdout16,ml_hmm|logreg,0.9474,experiments/final/ablation_summary.csv
+fig_classifier_only_vs_hmm.png,holdout16,ml_hmm|decision_tree,0.9509,experiments/final/ablation_summary.csv
+fig_classifier_only_vs_hmm.png,holdout16,ml_hmm|random_forest,0.9511,experiments/final/ablation_summary.csv
+fig_classifier_only_vs_hmm.png,holdout16,ml_hmm|extra_trees,0.9505,experiments/final/ablation_summary.csv
+fig_classifier_only_vs_hmm.png,holdout16,ml_hmm|hist_gb,0.9511,experiments/final/ablation_summary.csv
+fig_classifier_only_vs_hmm.png,student_test10,classifier_only|logreg,0.7136,experiments/final/ablation_summary.csv
+fig_classifier_only_vs_hmm.png,student_test10,classifier_only|decision_tree,0.7025,experiments/final/ablation_summary.csv
+fig_classifier_only_vs_hmm.png,student_test10,classifier_only|random_forest,0.7079,experiments/final/ablation_summary.csv
+fig_classifier_only_vs_hmm.png,student_test10,classifier_only|extra_trees,0.7044,experiments/final/ablation_summary.csv
+fig_classifier_only_vs_hmm.png,student_test10,classifier_only|hist_gb,0.7228,experiments/final/ablation_summary.csv
+fig_classifier_only_vs_hmm.png,student_test10,ml_hmm|logreg,0.9671,experiments/final/ablation_summary.csv
+fig_classifier_only_vs_hmm.png,student_test10,ml_hmm|decision_tree,0.9737,experiments/final/ablation_summary.csv
+fig_classifier_only_vs_hmm.png,student_test10,ml_hmm|random_forest,0.973,experiments/final/ablation_summary.csv
+fig_classifier_only_vs_hmm.png,student_test10,ml_hmm|extra_trees,0.9738,experiments/final/ablation_summary.csv
+fig_classifier_only_vs_hmm.png,student_test10,ml_hmm|hist_gb,0.9742,experiments/final/ablation_summary.csv
+fig_per_trip_delta.png,holdout16,35,-0.006800000000000028,experiments/final/ablation_per_trip.csv
+fig_per_trip_delta.png,holdout16,27,-0.0035999999999999366,experiments/final/ablation_per_trip.csv
+fig_per_trip_delta.png,holdout16,1,-0.0017999999999999128,experiments/final/ablation_per_trip.csv
+fig_per_trip_delta.png,holdout16,5,0.0,experiments/final/ablation_per_trip.csv
+fig_per_trip_delta.png,holdout16,24,0.0,experiments/final/ablation_per_trip.csv
+fig_per_trip_delta.png,holdout16,71,0.0,experiments/final/ablation_per_trip.csv
+fig_per_trip_delta.png,holdout16,41,0.0013999999999999568,experiments/final/ablation_per_trip.csv
+fig_per_trip_delta.png,holdout16,51,0.0016000000000000458,experiments/final/ablation_per_trip.csv
+fig_per_trip_delta.png,holdout16,75,0.0030999999999999917,experiments/final/ablation_per_trip.csv
+fig_per_trip_delta.png,holdout16,78,0.0038999999999999035,experiments/final/ablation_per_trip.csv
+fig_per_trip_delta.png,holdout16,62,0.0048000000000000265,experiments/final/ablation_per_trip.csv
+fig_per_trip_delta.png,holdout16,33,0.006800000000000028,experiments/final/ablation_per_trip.csv
+fig_per_trip_delta.png,holdout16,63,0.00770000000000004,experiments/final/ablation_per_trip.csv
+fig_per_trip_delta.png,holdout16,45,0.008099999999999996,experiments/final/ablation_per_trip.csv
+fig_per_trip_delta.png,holdout16,48,0.012900000000000023,experiments/final/ablation_per_trip.csv
+fig_per_trip_delta.png,holdout16,32,0.015100000000000002,experiments/final/ablation_per_trip.csv
+fig_per_trip_delta.png,student_test10,91,-0.0043999999999999595,experiments/final/ablation_per_trip.csv
+fig_per_trip_delta.png,student_test10,0,-0.0037000000000000366,experiments/final/ablation_per_trip.csv
+fig_per_trip_delta.png,student_test10,7,0.0,experiments/final/ablation_per_trip.csv
+fig_per_trip_delta.png,student_test10,52,0.0,experiments/final/ablation_per_trip.csv
+fig_per_trip_delta.png,student_test10,56,0.0,experiments/final/ablation_per_trip.csv
+fig_per_trip_delta.png,student_test10,65,0.0,experiments/final/ablation_per_trip.csv
+fig_per_trip_delta.png,student_test10,40,0.0016000000000000458,experiments/final/ablation_per_trip.csv
+fig_per_trip_delta.png,student_test10,76,0.014500000000000068,experiments/final/ablation_per_trip.csv
+fig_per_trip_delta.png,student_test10,9,0.016799999999999926,experiments/final/ablation_per_trip.csv
+fig_per_trip_delta.png,student_test10,77,0.022199999999999998,experiments/final/ablation_per_trip.csv
+fig_fp_breakdown_student_test.png,geometric_hmm|-,fp_reverse_direction,49.0,experiments/final/ablation_per_trip.csv
+fig_fp_breakdown_student_test.png,geometric_hmm|-,fp_matched,70.0,experiments/final/ablation_per_trip.csv
+fig_fp_breakdown_student_test.png,geometric_hmm|-,fp_gap_fill_only,100.0,experiments/final/ablation_per_trip.csv
+fig_fp_breakdown_student_test.png,ml_hmm|random_forest,fp_reverse_direction,21.0,experiments/final/ablation_per_trip.csv
+fig_fp_breakdown_student_test.png,ml_hmm|random_forest,fp_matched,54.0,experiments/final/ablation_per_trip.csv
+fig_fp_breakdown_student_test.png,ml_hmm|random_forest,fp_gap_fill_only,101.0,experiments/final/ablation_per_trip.csv
+fig_confusion_matrices.png,logreg,tn,939579.0,experiments/final/confusion_matrices_oof.csv
+fig_confusion_matrices.png,logreg,fp,28990.0,experiments/final/confusion_matrices_oof.csv
+fig_confusion_matrices.png,logreg,fn,35943.0,experiments/final/confusion_matrices_oof.csv
+fig_confusion_matrices.png,logreg,tp,121045.0,experiments/final/confusion_matrices_oof.csv
+fig_confusion_matrices.png,decision_tree,tn,946051.0,experiments/final/confusion_matrices_oof.csv
+fig_confusion_matrices.png,decision_tree,fp,22518.0,experiments/final/confusion_matrices_oof.csv
+fig_confusion_matrices.png,decision_tree,fn,32704.0,experiments/final/confusion_matrices_oof.csv
+fig_confusion_matrices.png,decision_tree,tp,124284.0,experiments/final/confusion_matrices_oof.csv
+fig_confusion_matrices.png,random_forest,tn,948616.0,experiments/final/confusion_matrices_oof.csv
+fig_confusion_matrices.png,random_forest,fp,19953.0,experiments/final/confusion_matrices_oof.csv
+fig_confusion_matrices.png,random_forest,fn,32277.0,experiments/final/confusion_matrices_oof.csv
+fig_confusion_matrices.png,random_forest,tp,124711.0,experiments/final/confusion_matrices_oof.csv
+fig_confusion_matrices.png,extra_trees,tn,949391.0,experiments/final/confusion_matrices_oof.csv
+fig_confusion_matrices.png,extra_trees,fp,19178.0,experiments/final/confusion_matrices_oof.csv
+fig_confusion_matrices.png,extra_trees,fn,35379.0,experiments/final/confusion_matrices_oof.csv
+fig_confusion_matrices.png,extra_trees,tp,121609.0,experiments/final/confusion_matrices_oof.csv
+fig_confusion_matrices.png,hist_gb,tn,946625.0,experiments/final/confusion_matrices_oof.csv
+fig_confusion_matrices.png,hist_gb,fp,21944.0,experiments/final/confusion_matrices_oof.csv
+fig_confusion_matrices.png,hist_gb,fn,30525.0,experiments/final/confusion_matrices_oof.csv
+fig_confusion_matrices.png,hist_gb,tp,126463.0,experiments/final/confusion_matrices_oof.csv
+fig_train_vs_cv.png,train_macro_f1,logreg,0.8793,experiments/final/train_vs_cv_metrics.csv
+fig_train_vs_cv.png,train_macro_f1,decision_tree,0.9089,experiments/final/train_vs_cv_metrics.csv
+fig_train_vs_cv.png,train_macro_f1,extra_trees,0.9005,experiments/final/train_vs_cv_metrics.csv
+fig_train_vs_cv.png,train_macro_f1,random_forest,0.9203,experiments/final/train_vs_cv_metrics.csv
+fig_train_vs_cv.png,train_macro_f1,hist_gb,0.9211,experiments/final/train_vs_cv_metrics.csv
+fig_train_vs_cv.png,cv_macro_f1,logreg,0.8776,experiments/final/train_vs_cv_metrics.csv
+fig_train_vs_cv.png,cv_macro_f1,decision_tree,0.8949,experiments/final/train_vs_cv_metrics.csv
+fig_train_vs_cv.png,cv_macro_f1,extra_trees,0.8944,experiments/final/train_vs_cv_metrics.csv
+fig_train_vs_cv.png,cv_macro_f1,random_forest,0.9,experiments/final/train_vs_cv_metrics.csv
+fig_train_vs_cv.png,cv_macro_f1,hist_gb,0.9006,experiments/final/train_vs_cv_metrics.csv
+fig_train_vs_cv.png,train_log_loss,logreg,0.1449,experiments/final/train_vs_cv_metrics.csv
+fig_train_vs_cv.png,train_log_loss,decision_tree,0.1007,experiments/final/train_vs_cv_metrics.csv
+fig_train_vs_cv.png,train_log_loss,extra_trees,0.1132,experiments/final/train_vs_cv_metrics.csv
+fig_train_vs_cv.png,train_log_loss,random_forest,0.0872,experiments/final/train_vs_cv_metrics.csv
+fig_train_vs_cv.png,train_log_loss,hist_gb,0.0889,experiments/final/train_vs_cv_metrics.csv
+fig_train_vs_cv.png,cv_log_loss,logreg,0.1468,experiments/final/train_vs_cv_metrics.csv
+fig_train_vs_cv.png,cv_log_loss,decision_tree,0.1304,experiments/final/train_vs_cv_metrics.csv
+fig_train_vs_cv.png,cv_log_loss,extra_trees,0.1214,experiments/final/train_vs_cv_metrics.csv
+fig_train_vs_cv.png,cv_log_loss,random_forest,0.1108,experiments/final/train_vs_cv_metrics.csv
+fig_train_vs_cv.png,cv_log_loss,hist_gb,0.1114,experiments/final/train_vs_cv_metrics.csv

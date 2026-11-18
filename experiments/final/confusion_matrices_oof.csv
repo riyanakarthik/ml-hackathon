@@ -1,0 +1,6 @@
+model,tn,fp,fn,tp,source
+logreg,939579,28990,35943,121045,"experiments/ml/oof_logreg.joblib (5-fold OOF, 64 tune trips, valid rows)"
+decision_tree,946051,22518,32704,124284,"experiments/ml/oof_decision_tree.joblib (5-fold OOF, 64 tune trips, valid rows)"
+random_forest,948616,19953,32277,124711,"experiments/ml/oof_random_forest.joblib (5-fold OOF, 64 tune trips, valid rows)"
+extra_trees,949391,19178,35379,121609,"experiments/ml/oof_extra_trees.joblib (5-fold OOF, 64 tune trips, valid rows)"
+hist_gb,946625,21944,30525,126463,"experiments/ml/oof_hist_gb.joblib (5-fold OOF, 64 tune trips, valid rows)"
