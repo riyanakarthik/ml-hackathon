@@ -64,3 +64,13 @@ Results measured with `scripts/evaluate.py` (means over trips):
 | student_test (10) | hmm | 0.857 | 0.988 | 0.916 | 0.906 | 0.996 | 0.999 | 221 ms |
 
 HMM parameters (k = 8, radius 50 m, β = 15 m) are hand-set defaults. They were not tuned on either split.
+
+## Frontend — Evaluator Dashboard
+
+An interactive **Streamlit + Folium** web UI that connects to this FastAPI backend over the network.  See [`frontend/README.md`](frontend/README.md) for details.
+
+```bash
+cd frontend
+pip install -r requirements.txt
+streamlit run app.py          # connects to http://localhost:8000 by default
+```
