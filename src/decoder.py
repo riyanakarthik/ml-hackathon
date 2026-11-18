@@ -20,6 +20,7 @@ from typing import Callable, Sequence
 import numpy as np
 from scipy.sparse.csgraph import dijkstra
 
+from .config import BASELINE_V1, MatcherConfig
 from .matcher import Candidates, RoadNetwork
 
 NEG_INF = -np.inf
@@ -31,6 +32,7 @@ class MatchResult:
     point_arc_ids: np.ndarray        # (T,) matched arc per GPS point, -1 if none
     point_xy: np.ndarray             # (T, 2) matched position in metres (nan if none)
     route_arc_ids: list[int]         # connected, de-duplicated arc sequence
+    route_is_fill: list[bool] = field(default_factory=list)  # True = inserted by gap filling
     info: dict = field(default_factory=dict)
 
 
@@ -167,10 +169,22 @@ def route_distance(net: RoadNetwork, nd: NetworkDistance, arc_a: int, off_a: flo
     return rest + mid + off_b
 
 
+def is_reverse_twin(net: RoadNetwork, a: int, b: int) -> bool:
+    return a != b and net.arcs[a, 0] == net.arcs[b, 1] and net.arcs[a, 1] == net.arcs[b, 0]
+
+
 def make_hmm_transition_fn(net: RoadNetwork, cands: Sequence[Candidates],
                            track_xy: np.ndarray, nd: NetworkDistance,
-                           beta: float = 15.0) -> TransitionFn:
-    """Newson & Krumm transition: log p = -|d_route - d_straight| / beta.
+                           beta: float = 15.0, backtrack_tol_m: float = 5.0,
+                           backtrack_penalty: float = 0.0,
+                           uturn_penalty: float = 0.0) -> TransitionFn:
+    """Newson & Krumm transition: log p = -|d_route - d_straight| / beta, plus
+    optional penalties (all 0 in baseline_v1):
+
+    * backtrack_penalty > 0: moving backwards on the same arc by more than
+      backtrack_tol_m is scored as GPS noise (d_route = 0) with a penalty of
+      backtrack_penalty per metre, instead of requiring a loop through the graph.
+    * uturn_penalty: subtracted when moving onto the reverse twin of an arc.
 
     Hook for a learned model: any callable returning (k_s, k_t) log-scores
     (e.g. built from features like d_route, d_straight, dt, turn angle)."""
@@ -181,11 +195,19 @@ def make_hmm_transition_fn(net: RoadNetwork, cands: Sequence[Candidates],
         limit = max(nd.limit, 3.0 * d_gc + 200.0)
         out = np.full((len(cs), len(ct)), NEG_INF)
         for i in range(len(cs)):
+            a, oa = int(cs.arc_ids[i]), float(cs.offset_m[i])
             for j in range(len(ct)):
-                d = route_distance(net, nd, int(cs.arc_ids[i]), float(cs.offset_m[i]),
-                                   int(ct.arc_ids[j]), float(ct.offset_m[j]), limit)
+                b, ob = int(ct.arc_ids[j]), float(ct.offset_m[j])
+                if backtrack_penalty > 0 and a == b and ob < oa - backtrack_tol_m:
+                    out[i, j] = (-d_gc / beta
+                                 - backtrack_penalty * (oa - ob - backtrack_tol_m))
+                    continue
+                d = route_distance(net, nd, a, oa, b, ob, limit, backtrack_tol_m)
                 if np.isfinite(d):
-                    out[i, j] = -abs(d - d_gc) / beta
+                    score = -abs(d - d_gc) / beta
+                    if uturn_penalty and is_reverse_twin(net, a, b):
+                        score -= uturn_penalty
+                    out[i, j] = score
         return out
 
     return fn
@@ -196,18 +218,20 @@ def make_hmm_transition_fn(net: RoadNetwork, cands: Sequence[Candidates],
 # ----------------------------------------------------------------------------
 
 def assemble_route(point_arc_ids: np.ndarray, net: RoadNetwork, nd: NetworkDistance,
-                   max_gap_m: float = 3000.0) -> tuple[list[int], int]:
+                   max_gap_m: float = 3000.0, return_fill_mask: bool = False):
     """Collapse per-point arcs to a sequence and fill gaps between consecutive
-    distinct arcs with shortest paths. Returns (route, n_unfilled_gaps)."""
+    distinct arcs with shortest paths. Returns (route, n_unfilled_gaps) or,
+    with return_fill_mask, (route, n_unfilled_gaps, is_fill)."""
     seq: list[int] = []
     for a in point_arc_ids:
         a = int(a)
         if a >= 0 and (not seq or seq[-1] != a):
             seq.append(a)
-    if not seq:
-        return [], 0
-    route = [seq[0]]
+    route: list[int] = []
+    is_fill: list[bool] = []
     unfilled = 0
+    if seq:
+        route, is_fill = [seq[0]], [False]
     for b in seq[1:]:
         a = route[-1]
         to_a, from_b = int(net.arcs[a, 1]), int(net.arcs[b, 0])
@@ -216,10 +240,45 @@ def assemble_route(point_arc_ids: np.ndarray, net: RoadNetwork, nd: NetworkDista
             if fill is None:
                 unfilled += 1
             else:
-                route.extend(x for x in fill if x != route[-1])
+                for x in fill:
+                    if x != route[-1]:
+                        route.append(x)
+                        is_fill.append(True)
         if route[-1] != b:
             route.append(b)
+            is_fill.append(False)
+        else:
+            is_fill[-1] = False  # matched directly, not only filled
+    if return_fill_mask:
+        return route, unfilled, is_fill
     return route, unfilled
+
+
+def remove_short_loops(route: list[int], is_fill: list[bool], arc_len: np.ndarray,
+                       max_loop_m: float) -> tuple[list[int], list[bool]]:
+    """Cut cycles A ... A from the route when the arcs travelled between the
+    two visits total less than max_loop_m (typically decoder jitter, e.g.
+    A -> reverse(A) -> A). Continuity is preserved because the route resumes
+    from the first visit of A. Longer cycles are kept as real traversals."""
+    if max_loop_m <= 0:
+        return route, is_fill
+    out: list[int] = []
+    flags: list[bool] = []
+    pos: dict[int, int] = {}
+    for a, f in zip(route, is_fill):
+        p = pos.get(a)
+        if p is not None and float(arc_len[out[p + 1:]].sum()) < max_loop_m:
+            for x in out[p + 1:]:
+                if pos.get(x, -1) > p:
+                    del pos[x]
+            del out[p + 1:]
+            del flags[p + 1:]
+            flags[p] = flags[p] and f
+            continue
+        pos[a] = len(out)
+        out.append(a)
+        flags.append(f)
+    return out, flags
 
 
 def _positions(cands: Sequence[Candidates], choice: np.ndarray):
@@ -231,6 +290,45 @@ def _positions(cands: Sequence[Candidates], choice: np.ndarray):
             arcs[t] = cands[t].arc_ids[j]
             xy[t] = cands[t].proj_xy[j]
     return arcs, xy
+
+
+def thin_observations(track_xy: np.ndarray, cands: Sequence[Candidates],
+                      min_spacing_m: float) -> np.ndarray:
+    """Boolean mask of points kept for decoding: a point is skipped when it is
+    closer than min_spacing_m to the last kept point (first/last always kept)."""
+    keep = np.zeros(len(track_xy), bool)
+    last = None
+    for t in range(len(track_xy)):
+        if not len(cands[t]):
+            continue
+        if last is None or min_spacing_m <= 0 or \
+                np.linalg.norm(track_xy[t] - track_xy[last]) >= min_spacing_m:
+            keep[t] = True
+            last = t
+    if last is not None:
+        keep[last] = True
+    nz = [t for t in range(len(cands)) if len(cands[t])]
+    if nz:
+        keep[nz[-1]] = True
+    return keep
+
+
+def _fill_skipped(choice: np.ndarray, keep: np.ndarray, cands: Sequence[Candidates],
+                  em: Sequence[np.ndarray]) -> np.ndarray:
+    """Give thinned-out points the candidate on the previous decoded arc if
+    available, otherwise their best-emission candidate."""
+    choice = choice.copy()
+    prev_arc = -1
+    for t in range(len(choice)):
+        if keep[t]:
+            if choice[t] >= 0:
+                prev_arc = int(cands[t].arc_ids[choice[t]])
+            continue
+        if not len(cands[t]):
+            continue
+        same = np.flatnonzero(cands[t].arc_ids == prev_arc)
+        choice[t] = int(same[0]) if len(same) else int(np.argmax(em[t]))
+    return choice
 
 
 # ----------------------------------------------------------------------------
@@ -257,21 +355,35 @@ def greedy_continuity_decode(cands: Sequence[Candidates], net: RoadNetwork,
         prev_arc = int(c.arc_ids[choice[t]])
     arcs, xy = _positions(cands, choice)
     nd = NetworkDistance(net)
-    route, unfilled = assemble_route(arcs, net, nd)
-    return MatchResult("geometric_greedy_continuity", arcs, xy, route,
+    route, unfilled, fill = assemble_route(arcs, net, nd, return_fill_mask=True)
+    return MatchResult("geometric_greedy_continuity", arcs, xy, route, fill,
                        {"sigma_m": sigma, "unfilled_gaps": unfilled})
 
 
 def hmm_viterbi_decode(cands: Sequence[Candidates], net: RoadNetwork, track_xy: np.ndarray,
-                       sigma: float | None = None, beta: float = 15.0) -> MatchResult:
-    """Newson & Krumm-style HMM decoded with ``viterbi_log``."""
-    sigma = sigma or estimate_sigma(cands)
-    nd = NetworkDistance(net)
+                       sigma: float | None = None, beta: float | None = None,
+                       config: MatcherConfig = BASELINE_V1) -> MatchResult:
+    """Newson & Krumm-style HMM decoded with ``viterbi_log``.
+
+    ``sigma``/``beta`` arguments override the config (kept for compatibility)."""
+    cfg = config
+    if beta is None:
+        beta = cfg.beta
+    if sigma is None:
+        sigma = cfg.sigma_m if cfg.sigma_m is not None else estimate_sigma(cands)
+    sigma = sigma * cfg.sigma_scale
+    nd = NetworkDistance(net, cfg.dijkstra_limit_m)
     em = emission_log_probs(cands, sigma)
-    trans = make_hmm_transition_fn(net, cands, track_xy, nd, beta)
-    choice, breaks = viterbi_log(em, trans)
+    keep = thin_observations(track_xy, cands, cfg.min_spacing_m)
+    em_dec = [e if keep[t] else np.empty(0) for t, e in enumerate(em)]
+    trans = make_hmm_transition_fn(net, cands, track_xy, nd, beta, cfg.backtrack_tol_m,
+                                   cfg.backtrack_penalty, cfg.uturn_penalty)
+    choice, breaks = viterbi_log(em_dec, trans)
+    choice = _fill_skipped(choice, keep, cands, em)
     arcs, xy = _positions(cands, choice)
-    route, unfilled = assemble_route(arcs, net, nd)
-    return MatchResult("hmm_viterbi", arcs, xy, route,
-                       {"sigma_m": sigma, "beta": beta, "hmm_breaks": len(breaks) - 1,
-                        "unfilled_gaps": unfilled})
+    route, unfilled, fill = assemble_route(arcs, net, nd, cfg.fill_max_gap_m, return_fill_mask=True)
+    route, fill = remove_short_loops(route, fill, net.arc_len, cfg.max_loop_m)
+    return MatchResult("hmm_viterbi", arcs, xy, route, fill,
+                       {"config": cfg.name, "sigma_m": round(sigma, 3), "beta": beta,
+                        "hmm_breaks": len(breaks) - 1, "unfilled_gaps": unfilled,
+                        "decoded_points": int(keep.sum())})

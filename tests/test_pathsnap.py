@@ -195,3 +195,71 @@ def test_api_real_trip_38(monkeypatch):
     assert len(body["gps_coordinates"]) == len(body["predicted_coordinates"])
     lat, lon = body["gps_coordinates"][0]
     assert lat == pytest.approx(53.844471) and lon == pytest.approx(27.494492)
+
+
+# ---------------------------------------------------------------- config / v2 features
+
+def test_baseline_config_roundtrip(tmp_path):
+    from src.config import BASELINE_V1, MatcherConfig, get_config
+    assert get_config("baseline_v1") == BASELINE_V1
+    assert (BASELINE_V1.k, BASELINE_V1.radius_m, BASELINE_V1.beta) == (8, 50.0, 15.0)
+    p = tmp_path / "c.json"
+    BASELINE_V1.with_(name="x", beta=7.0).save(p)
+    assert MatcherConfig.load(p).beta == 7.0
+
+
+def test_remove_short_loops():
+    from src.decoder import remove_short_loops
+    arc_len = np.full(10, 10.0)
+    r, f = remove_short_loops([0, 1, 2, 1, 3], [False] * 5, arc_len, 25.0)
+    assert r == [0, 1, 3]
+    r, _ = remove_short_loops([0, 1, 2, 1, 3], [False] * 5, arc_len, 5.0)
+    assert r == [0, 1, 2, 1, 3]  # loop (10 m) longer than threshold kept
+    r, _ = remove_short_loops([0, 1, 2], [False] * 3, arc_len, 0.0)
+    assert r == [0, 1, 2]
+
+
+@pytest.mark.parametrize("kw", [{}, {"min_spacing_m": 30.0, "backtrack_penalty": 0.1,
+                                     "uturn_penalty": 5.0, "max_loop_m": 100.0}])
+def test_configurable_hmm_synthetic(tmp_path, kw):
+    from src.config import BASELINE_V1
+    write_trip(tmp_path)
+    trip = load_trip(1, tmp_path)
+    res, _, _ = predict_trip(trip, "hmm", config=BASELINE_V1.with_(**kw))
+    assert res.route_arc_ids == [0, 1]
+    assert (res.point_arc_ids >= 0).all()  # thinned points still get an arc
+
+
+def test_align_points_to_route(tmp_path):
+    from src.evaluation import align_points_to_route
+    write_trip(tmp_path)
+    trip = load_trip(1, tmp_path)
+    proj = LocalProjector.from_points(trip.track_lonlat)
+    xy = proj.to_xy(trip.track_lonlat)
+    labels, dist = align_points_to_route(xy, [0, 1], proj.to_xy(trip.nodes), trip.arcs)
+    assert labels.tolist() == [0] * 8 + [1] * 8
+    assert dist.max() < 5
+
+
+def test_route_diagnostics_categories():
+    from src.evaluation import route_diagnostics
+    arcs = np.array([[0, 1], [1, 2], [2, 1], [1, 3], [3, 4]])
+    arc_len = np.ones(5)
+    # ref 0,1 ; pred 0,1,2(reverse of 1),3(fill only, inside span? no: after last hit)
+    d = route_diagnostics([0, 1, 2, 1, 3], [False, False, False, False, True], [0, 1, 2, 1],
+                          [0, 1], arcs, arc_len)
+    assert d["fp_reverse_direction"] == 1 and d["n_fp"] == 2
+    assert d["repeated_traversals"] == 1
+
+
+def test_api_config_default_and_rollback(tmp_path, monkeypatch):
+    write_trip(tmp_path)
+    monkeypatch.setenv("PATHSNAP_DATA_DIR", str(tmp_path))
+    from main import DEFAULT_CONFIG, app
+    c = TestClient(app)
+    assert c.get("/health").json()["default_config"] == DEFAULT_CONFIG
+    r = c.post("/predict", json={"trip_id": "1"}).json()
+    assert r["details"]["config"] == DEFAULT_CONFIG and r["predicted_arc_ids"] == [0, 1]
+    r = c.post("/predict", json={"trip_id": "1", "config": "baseline_v1"}).json()
+    assert r["details"]["config"] == "baseline_v1"
+    assert c.post("/predict", json={"trip_id": "1", "config": "../etc"}).status_code == 400
