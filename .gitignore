@@ -20,3 +20,7 @@ evaluator_test/
 
 # Evaluator-trip maps containing ground-truth geometry
 experiments/final_evaluation/maps/
+# evaluator-trip maps draw the ground-truth .route geometry: keep local only
+experiments/final_evaluation/maps/
+reports/tooling/.venv/
+reports/tooling/node_modules/

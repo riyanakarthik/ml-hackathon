@@ -1,0 +1,4 @@
+split,trips,gps_points_total,gps_points_median,gps_points_min,gps_points_max,nodes_median,arcs_median,arcs_max,route_arcs_median,route_arcs_total,frac_1s_mean,max_gap_s,trips_with_repeated_route_arcs
+student_test,10,19160,1420.0,262,3958,6596.5,13145.0,56027,250.0,3477,0.982,210.0,1.0
+train,80,208417,1529.0,361,19313,9608.0,19526.5,307392,280.0,31336,0.9383,153064.0,9.0
+evaluator_test,10,19674,1245.0,458,6854,12391.0,24121.0,107451,373.5,3491,0.988,220.00099999999998,

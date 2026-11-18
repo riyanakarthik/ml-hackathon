@@ -1,0 +1,3 @@
+split,trips,weak_components_median,weak_components_max,largest_weak_frac_min,largest_strong_frac_median,isolated_nodes_total,two_way_arc_frac_median
+student_test,10,11.0,100,0.874,0.96095,0,0.9326
+train,80,20.0,421,0.6928,0.9641500000000001,0,0.9511000000000001

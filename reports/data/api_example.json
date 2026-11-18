@@ -1,0 +1,92 @@
+{
+ "health": {
+  "status": "ok",
+  "data_dir": "/Users/riyana/Desktop/ml-hackathon/Student folder",
+  "default_config": "ml_v3",
+  "configs": [
+   "baseline_v1",
+   "ml_candidate",
+   "ml_v3",
+   "tuned_candidate",
+   "tuned_v2"
+  ]
+ },
+ "trips_count": 90,
+ "predict_00000091": {
+  "trip_id": "00000091",
+  "gps_coordinates": [
+   [
+    47.099623,
+    2.418679
+   ],
+   [
+    47.099593,
+    2.418516
+   ],
+   [
+    47.099536,
+    2.418324
+   ],
+   "..."
+  ],
+  "predicted_coordinates": [
+   [
+    47.0995607,
+    2.418734
+   ],
+   [
+    47.0995037,
+    2.4185947
+   ],
+   [
+    47.0994309,
+    2.4184166
+   ],
+   "..."
+  ],
+  "predicted_arc_ids": [
+   345,
+   347,
+   3620,
+   "..."
+  ],
+  "point_arc_ids": [
+   345,
+   345,
+   345,
+   "..."
+  ],
+  "metrics": {
+   "arc_precision": 0.9872,
+   "arc_recall": 0.9957,
+   "arc_f1": 0.9914,
+   "route_continuity": 1.0,
+   "n_pred_arcs": 234,
+   "n_ref_arcs": 232
+  },
+  "method": "hmm_viterbi_ml_emission",
+  "runtime_ms": 185.4,
+  "details": {
+   "timings_ms": {
+    "network_ms": 14.7,
+    "candidates_ms": 16.2,
+    "decode_ms": 152.7
+   },
+   "config": "ml_v3",
+   "sigma_m": 4.663,
+   "beta": 2.335001654519724,
+   "hmm_breaks": 0,
+   "unfilled_gaps": 0,
+   "decoded_points": 544,
+   "emission": "ml",
+   "points_without_candidates": 0,
+   "mean_candidates_per_point": 9.57
+  }
+ },
+ "list_lengths": {
+  "gps_coordinates": 874,
+  "predicted_coordinates": 874,
+  "predicted_arc_ids": 236,
+  "point_arc_ids": 874
+ }
+}

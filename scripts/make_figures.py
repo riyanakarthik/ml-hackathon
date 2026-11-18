@@ -81,7 +81,7 @@ def fig_optuna_history(csv, value_col, title, ylabel, name, minimize=False, note
                 xytext=(10, -18 if not minimize else 12), textcoords="offset points", fontsize=8, color=INK2)
     b = d.loc[d[value_col].idxmin() if minimize else d[value_col].idxmax()]
     ax.annotate(f"best #{int(b['number'])}: {b[value_col]:.4f}", (b["number"], b[value_col]),
-                xytext=(-10, 10), textcoords="offset points", ha="right",
+                xytext=(-10, 10 if minimize else -18), textcoords="offset points", ha="right",
                 fontsize=8, color=INK)
     ax.set_xlabel("trial"); ax.set_ylabel(ylabel); ax.set_title(title)
     ax.legend(loc="lower right" if not minimize else "upper right")
